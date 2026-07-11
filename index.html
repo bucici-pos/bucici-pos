@@ -229,7 +229,21 @@ Transaksi Baru
 </div>
                 <button class="btn-primary" style="width:auto;" onclick="ambilDataDashboard()">🔄 Segarkan Laporan</button>
             </div>
+<div id="kamar-riwayat" class="kamar-section">
 
+    <div class="card">
+
+        <div class="card-title">
+            🧾 Riwayat Transaksi
+        </div>
+
+        <div id="list-transaksi">
+            Memuat...
+        </div>
+
+    </div>
+
+</div>
             <!-- KASIR -->
             <div id="kamar-kasir" class="kamar-section">
                 <div class="pos-container">
@@ -282,6 +296,8 @@ Transaksi Baru
             if(window.innerWidth <= 768) toggleSidebar();
             if(namaKamar === 'kasir' && daftarProdukGlobal.length === 0) ambilMenuKasir();
             if(namaKamar === 'dash') ambilDataDashboard();
+            if(namaKamar === 'riwayat')
+    ambilRiwayat();
         }
 
         function toggleSidebar() {
@@ -676,6 +692,41 @@ function tutupNota(){
                 gridWrap.style.display = "grid"; listWrap.style.display = "none";
             }
         }
+        async function ambilRiwayat(){
+
+    const res = await fetch(API_URL + "?action=transaksi");
+
+    const hasil = await res.json();
+
+    let html = "";
+
+    hasil.data.forEach(item=>{
+
+        html += `
+        <div class="prod-list-row">
+
+            <div>
+
+                <b>${item.nomor_transaksi}</b><br>
+
+                ${new Date(item.tanggal).toLocaleString("id-ID")}
+
+            </div>
+
+            <div>
+
+                Rp ${Number(item.total).toLocaleString("id-ID")}
+
+            </div>
+
+        </div>
+        `;
+
+    });
+
+    document.getElementById("list-transaksi").innerHTML = html;
+
+}
     </script>
 </body>
     </html>
