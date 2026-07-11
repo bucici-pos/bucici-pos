@@ -694,7 +694,7 @@ function tutupNota(){
                 gridWrap.style.display = "grid"; listWrap.style.display = "none";
             }
         }
-        async function ambilRiwayat(){
+ async function ambilRiwayat(){
 
     const res = await fetch(API_URL + "?action=transaksi");
 
@@ -705,22 +705,16 @@ function tutupNota(){
     hasil.data.forEach(item=>{
 
         html += `
-        html += `
-<div class="prod-list-row"
-onclick="lihatDetail('${item.penjualan_id}','${item.nomor_transaksi}')">
+        <div class="prod-list-row"
+        onclick="lihatDetail('${item.penjualan_id}','${item.nomor_transaksi}')">
 
             <div>
-
                 <b>${item.nomor_transaksi}</b><br>
-
                 ${new Date(item.tanggal).toLocaleString("id-ID")}
-
             </div>
 
             <div>
-
                 Rp ${Number(item.total).toLocaleString("id-ID")}
-
             </div>
 
         </div>
