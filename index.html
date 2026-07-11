@@ -189,7 +189,7 @@
         if(!mitra_id || !nama_toko) return alert('Mohon isi ID Mitra dan Nama Toko!');
         tunjukkanStatus('Sedang mendaftarkan toko...', 'info');
         try {
-            const respon = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'create_toko', mitra_id, nama_toko, jenis_usaha }) });
+            await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'create_toko', mitra_id, nama_toko, jenis_usaha }) });
             tunjukkanStatus('Selamat! Toko "'+nama_toko+'" berhasil dibuka. Lanjut ke menu Kelola Stok!', 'success');
         } catch (e) { 
             tunjukkanStatus('Proses Toko Selesai! Silakan lanjut ke menu Kelola Stok.', 'success'); 
@@ -205,12 +205,11 @@
         tunjukkanStatus('Sedang memasukkan produk ke sistem...', 'info');
         
         try {
-            // KIRIM DUA COMBINASI NAMA ACTION SUPAYA PASTI COCOK DENGAN APPS SCRIPT ANDA
+            // DISESUAIKAN DENGAN SKRIP: MENGGUNAKAN 'createProduk' SESUAI BARIS 32 KODE.GS ANDA
             await fetch(API_URL, { 
                 method: 'POST', 
                 body: JSON.stringify({ 
-                    action: 'buatProduk', // Alternatif nama fungsi 1
-                    action_alt: 'add_produk', // Alternatif nama fungsi 2
+                    action: 'createProduk', 
                     mitra_id, 
                     nama_produk, 
                     harga_jual: Number(harga_jual), 
@@ -238,8 +237,8 @@
             await fetch(API_URL, { 
                 method: 'POST', 
                 body: JSON.stringify({ 
-                    action: 'buatNota',
-                    action_alt: 'create_nota',
+                    action: 'createNota', // Mengikuti pola camelCase skrip
+                    action_alt: 'buatNota',
                     mitra_id, 
                     produk_id, 
                     qty: Number(qty), 
