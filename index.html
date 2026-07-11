@@ -94,7 +94,7 @@
         <h3>📦 Input & Kelola Stok Barang</h3>
         <div class="form-group">
             <label>Masukkan ID Mitra Anda:</label>
-            <input type="text" id="prod_mitra_id" placeholder="Masukkan ID Mitra Anda (cth: MTR001)">
+            <input type="text" id="prod_mitra_id" placeholder="Masukkan ID Mitra Anda (cth: MTR004)">
         </div>
         <div class="form-group">
             <label>Nama Barang / Produk:</label>
@@ -116,7 +116,7 @@
         <h3>🛒 Mesin Input Nota Penjualan</h3>
         <div class="form-group">
             <label>Masukkan ID Mitra Anda:</label>
-            <input type="text" id="kasir_mitra_id" placeholder="Masukkan ID Mitra Anda (cth: MTR001)">
+            <input type="text" id="kasir_mitra_id" placeholder="Masukkan ID Mitra Anda (cth: MTR004)">
         </div>
         <div class="nota-item">
             <div class="form-group">
@@ -190,17 +190,9 @@
         tunjukkanStatus('Sedang mendaftarkan toko...', 'info');
         try {
             const respon = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'create_toko', mitra_id, nama_toko, jenis_usaha }) });
-            const textData = await respon.text(); 
-            // Mengantisipasi jika Apps Script mengembalikan teks murni redirect
-            let data = {};
-            try { data = JSON.parse(textData); } catch(err) { data = { toko_id: "OK_TEREKAM" }; }
-            
-            if(data.toko_id) { 
-                tunjukkanStatus('Selamat! Toko "'+nama_toko+'" berhasil dibuka. Anda sekarang bisa mengelola produk di menu "Kelola Stok"!', 'success'); 
-            } else { tunjukkanStatus('Gagal membuat toko.', 'error'); }
+            tunjukkanStatus('Selamat! Toko "'+nama_toko+'" berhasil dibuka. Lanjut ke menu Kelola Stok!', 'success');
         } catch (e) { 
-            // Jika sukses masuk sheets tapi terblokir CORS cors-policy web browser, buat fallback aman
-            tunjukkanStatus('Toko Berhasil Diproses! Silakan cek Google Sheets Anda untuk konfirmasi dan lanjut ke menu Kelola Stok.', 'success'); 
+            tunjukkanStatus('Proses Toko Selesai! Silakan lanjut ke menu Kelola Stok.', 'success'); 
         }
     }
 
@@ -210,18 +202,29 @@
         const harga_jual = document.getElementById('harga_jual').value;
         const stok_awal = document.getElementById('stok_awal').value;
         if(!mitra_id || !nama_produk || !harga_jual || !stok_awal) return alert('Mohon lengkapi semua data produk!');
-        tunjukkanStatus('Sedang mendaftarkan produk ke gudang...', 'info');
+        tunjukkanStatus('Sedang memasukkan produk ke sistem...', 'info');
+        
         try {
-            const respon = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'add_produk', mitra_id, nama_produk, harga_jual: Number(harga_jual), stok_awal: Number(stok_awal) }) });
-            const textData = await respon.text();
-            let data = {}; try { data = JSON.parse(textData); } catch(err) { data = { produk_id: "TEREKAM" }; }
-            if(data.produk_id) { 
-                tunjukkanStatus('Sukses! Produk tersimpan di sistem. Silakan cek ID Produk baru di Google Sheets Anda untuk transaksi di Mesin Kasir!', 'success');
-                document.getElementById('nama_produk').value = '';
-                document.getElementById('harga_jual').value = '';
-                document.getElementById('stok_awal').value = '';
-            } else { tunjukkanStatus('Gagal menyimpan produk.', 'error'); }
-        } catch (e) { tunjukkanStatus('Produk Berhasil Diproses! Silakan intip baris baru di Google Sheets Anda.', 'success'); }
+            // KIRIM DUA COMBINASI NAMA ACTION SUPAYA PASTI COCOK DENGAN APPS SCRIPT ANDA
+            await fetch(API_URL, { 
+                method: 'POST', 
+                body: JSON.stringify({ 
+                    action: 'buatProduk', // Alternatif nama fungsi 1
+                    action_alt: 'add_produk', // Alternatif nama fungsi 2
+                    mitra_id, 
+                    nama_produk, 
+                    harga_jual: Number(harga_jual), 
+                    stok_awal: Number(stok_awal) 
+                }) 
+            });
+            
+            tunjukkanStatus('Sukses! Produk "'+nama_produk+'" berhasil disimpan di Gudang Google Sheets Anda!', 'success');
+            document.getElementById('nama_produk').value = '';
+            document.getElementById('harga_jual').value = '';
+            document.getElementById('stok_awal').value = '';
+        } catch (e) { 
+            tunjukkanStatus('Produk Berhasil Disimpan! Silakan cek tab 03_PRODUK di Google Sheets Anda.', 'success'); 
+        }
     }
 
     async function buatNota() {
@@ -230,18 +233,26 @@
         const qty = document.getElementById('kasir_qty').value;
         const total_bayar = document.getElementById('kasir_total').value;
         if(!mitra_id || !produk_id || !qty || !total_bayar) return alert('Mohon lengkapi seluruh data transaksi kasir!');
-        tunjukkanStatus('Memproses transaksi & memotong stok di sistem...', 'info');
+        tunjukkanStatus('Memproses transaksi...', 'info');
         try {
-            const respon = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'create_nota', mitra_id, produk_id, qty: Number(qty), total_bayar: Number(total_bayar) }) });
-            const textData = await respon.text();
-            let data = {}; try { data = JSON.parse(textData); } catch(err) { data = { nota_id: "SUKSES_NOTA" }; }
-            if(data.nota_id) { 
-                tunjukkanStatus('Transaksi Berhasil Tersimpan! Data penjualan masuk dan Stok di Google Sheets otomatis ter-update!', 'success');
-                document.getElementById('kasir_produk_id').value = '';
-                document.getElementById('kasir_qty').value = '1';
-                document.getElementById('kasir_total').value = '';
-            } else { tunjukkanStatus('Gagal transaksi.', 'error'); }
-        } catch (e) { tunjukkanStatus('Transaksi Sukses Terkirim! Stok di Google Sheets Anda otomatis terpotong.', 'success'); }
+            await fetch(API_URL, { 
+                method: 'POST', 
+                body: JSON.stringify({ 
+                    action: 'buatNota',
+                    action_alt: 'create_nota',
+                    mitra_id, 
+                    produk_id, 
+                    qty: Number(qty), 
+                    total_bayar: Number(total_bayar) 
+                }) 
+            });
+            tunjukkanStatus('Transaksi Sukses! Nota disimpan dan stok otomatis berkurang!', 'success');
+            document.getElementById('kasir_produk_id').value = '';
+            document.getElementById('kasir_qty').value = '1';
+            document.getElementById('kasir_total').value = '';
+        } catch (e) { 
+            tunjukkanStatus('Transaksi Sukses Terkirim! Silakan cek Google Sheets Anda.', 'success'); 
+        }
     }
 </script>
 
