@@ -567,6 +567,39 @@ function tutupNota(){
     .style.display="none";
 
 }
+        function cetakNota(){
+
+    const isiNota = document.getElementById("nota-content").innerHTML;
+
+
+    const halaman = window.open(
+        "",
+        "",
+        "width=400,height=600"
+    );
+
+
+    halaman.document.write(`
+
+    <html>
+    <body style="
+    font-family:Arial;
+    width:300px;
+    ">
+
+    ${isiNota}
+
+    </body>
+    </html>
+
+    `);
+
+
+    halaman.document.close();
+
+    halaman.print();
+
+}
         let currentPosView = 'grid';
         function togglePosView() {
             const btn = document.getElementById('btn-toggle-view');
