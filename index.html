@@ -6,27 +6,34 @@
     <title>BUCICI POS v2 - Sistem Kasir Multi-Tenant</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 15px; color: #333; }
-        .container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
         h2, h3 { text-align: center; color: #1a365d; margin-top: 0; }
-        .tab-menu { display: table; width: 100%; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; }
-        .tab-item { display: table-cell; text-align: center; padding: 10px; cursor: pointer; font-weight: bold; color: #718096; font-size: 14px; }
+        .tab-menu { display: flex; width: 100%; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; }
+        .tab-item { flex: 1; text-align: center; padding: 12px; cursor: pointer; font-weight: bold; color: #718096; font-size: 14px; }
         .tab-item.active { color: #2b6cb0; border-bottom: 3px solid #2b6cb0; }
         .kamar-box { display: none; }
         .kamar-box.active { display: block; }
-        .form-group { margin-bottom: 15px; position: relative; }
+        .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: #4a5568; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 8px; box-sizing: border-box; font-size: 15px; }
-        input:focus, select:focus { border-color: #3182ce; outline: none; }
-        button { width: 100%; padding: 12px; background: #3182ce; color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
-        button:hover { background: #2b6cb0; }
-        .btn-purple { background: #805ad5; }
-        .btn-purple:hover { background: #6b46c1; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 8px; box-sizing: border-box; font-size: 15px; }
+        button { width: 100%; padding: 12px; background: #805ad5; color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        button:hover { background: #6b46c1; }
+        .btn-blue { background: #3182ce; margin-bottom: 15px; }
+        .btn-blue:hover { background: #2b6cb0; }
         .status { margin-top: 15px; padding: 12px; border-radius: 8px; font-size: 14px; text-align: center; display: none; font-weight: 500; }
         .success { background: #c6f6d5; color: #22543d; border: 1px solid #9ae6b4; }
         .error { background: #fed7d7; color: #742a2a; border: 1px solid #feb2b2; }
         .info { background: #ebf8ff; color: #2b6cb0; border: 1px solid #90cdf4; }
         .row-grid { display: flex; gap: 10px; }
         .row-grid .form-group { flex: 1; }
+        
+        /* Style Tabel Stok */
+        .table-responsive { width: 100%; overflow-x: auto; margin-top: 15px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+        th { background: #edf2f7; color: #4a5568; padding: 10px; font-weight: 600; }
+        td { padding: 10px; border-bottom: 1px solid #e2e8f0; white-space: nowrap; }
+        tr:hover { background: #f7fafc; }
+        .badge-stok { background: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -35,15 +42,17 @@
     <h2>📊 BUCICI POS v2</h2>
     <p style="text-align:center; font-size:12px; color:#718096; margin-top:-10px;">Sistem Kasir Pintar Multi-Tenant</p>
     
+    <!-- Menu Tab Navigasi -->
     <div class="tab-menu">
-        <div class="tab-item active">Kelola Stok</div>
+        <div id="tab-input" class="tab-item active" onclick="gantiTab('input')">Input Stok</div>
+        <div id="tab-lihat" class="tab-item" onclick="gantiTab('lihat')">Lihat Daftar Stok</div>
     </div>
 
     <!-- BOX NOTIFIKASI JUJUR -->
     <div id="status_box" class="status"></div>
 
-    <!-- FORM INPUT PRODUK -->
-    <div id="kamar-produk" class="kamar-box active">
+    <!-- TAB 1: FORM INPUT PRODUK -->
+    <div id="kamar-input" class="kamar-box active">
         <h3>📦 Input & Kelola Stok Barang</h3>
         <div class="form-group">
             <label>Masukkan ID Toko Anda (Wajib):</label>
@@ -51,7 +60,7 @@
         </div>
         <div class="form-group">
             <label>Nama Barang / Produk:</label>
-            <input type="text" id="nama_produk" placeholder="Contoh: Ayam Goreng Mentega">
+            <input type="text" id="nama_produk" placeholder="Contoh: Ayam Goreng Pejantan">
         </div>
         <div class="row-grid">
             <div class="form-group">
@@ -60,7 +69,7 @@
             </div>
             <div class="form-group">
                 <label>SKU / Kode Barang:</label>
-                <input type="text" id="sku_produk" placeholder="Contoh: AG03">
+                <input type="text" id="sku_produk" placeholder="Contoh: PEJ01">
             </div>
         </div>
         <div class="row-grid">
@@ -70,25 +79,68 @@
             </div>
             <div class="form-group">
                 <label>Harga Jual (Rp):</label>
-                <input type="text" id="harga_jual" placeholder="Contoh: 16000">
+                <input type="text" id="harga_jual" placeholder="Contoh: 17000">
             </div>
         </div>
         <div class="row-grid">
             <div class="form-group">
                 <label>Jumlah Stok:</label>
-                <input type="text" id="stok_produk" value="20">
+                <input type="text" id="stok_produk" value="10">
             </div>
             <div class="form-group">
                 <label>Satuan:</label>
                 <input type="text" id="satuan_produk" value="porsi">
             </div>
         </div>
-        <button class="btn-purple" onclick="tambahProduk()">📥 Simpan Produk ke Gudang</button>
+        <button onclick="tambahProduk()">📥 Simpan Produk ke Gudang</button>
+    </div>
+
+    <!-- TAB 2: LIHAT DAFTAR STOK -->
+    <div id="kamar-lihat" class="kamar-box">
+        <h3>📋 Data Inventori Gudang</h3>
+        <button class="btn-blue" onclick="muatDaftarProduk()">🔄 Muat Ulang / Refresh Data</button>
+        
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Toko</th>
+                        <th>ID Produk</th>
+                        <th>Nama Produk</th>
+                        <th>SKU</th>
+                        <th>Harga Jual</th>
+                        <th>Stok</th>
+                    </tr>
+                </thead>
+                <tbody id="tabel_produk_body">
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: #a0aec0;">Belum ada data. Silakan klik Refresh Data.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbyBtqz72q3woSFcpTJwuiMfL_OW07jVbowsj7Nomwf9Ko3Pekye1YxNFbw77SbzibMZ/exec";
+
+    // Fungsi Ganti Tab Menu
+    function gantiTab(namaTab) {
+        document.getElementById('kamar-input').classList.remove('active');
+        document.getElementById('kamar-lihat').classList.remove('active');
+        document.getElementById('tab-input').classList.remove('active');
+        document.getElementById('tab-lihat').classList.remove('active');
+
+        if(namaTab === 'input') {
+            document.getElementById('kamar-input').classList.add('active');
+            document.getElementById('tab-input').classList.add('active');
+        } else {
+            document.getElementById('kamar-lihat').classList.add('active');
+            document.getElementById('tab-lihat').classList.add('active');
+            muatDaftarProduk(); // Otomatis load data saat tab dibuka
+        }
+    }
 
     function tunjukkanStatus(pesan, tipe) {
         const box = document.getElementById('status_box');
@@ -97,6 +149,7 @@
         box.style.display = 'block';
     }
 
+    // FUNGSI 1: INPUT PRODUK
     async function tambahProduk() {
         const toko_id = document.getElementById('prod_toko_id').value.trim();
         const nama_produk = document.getElementById('nama_produk').value.trim();
@@ -107,34 +160,28 @@
         const stok = document.getElementById('stok_produk').value.trim();
         const satuan = document.getElementById('satuan_produk').value.trim();
 
-        if(!toko_id || !nama_produk || !harga_jual) {
-            return alert('ID Toko, Nama Produk, dan Harga Jual wajib diisi!');
+        if(!toko_id || !nama_produk || !harga_jual || !sku) {
+            return alert('ID Toko, Nama Produk, SKU, dan Harga Jual wajib diisi!');
         }
         
         tunjukkanStatus('Menyimpan ke Google Sheets...', 'info');
         
-        // PAYLOAD DISESUAIKAN TOTAL DENGAN HAMPARAN VARIABEL DI PRODUK.GS Anda
         const payload = {
             action: 'createProduk',
             toko_id: toko_id,
             nama_produk: nama_produk,
             kategori: kategori,
             sku: sku,
-            harga_beli: harga_beli,  // Menggunakan snake_case
-            harga_jual: harga_jual,  // Menggunakan snake_case
+            harga_beli: harga_beli,
+            harga_jual: harga_jual,
             stok: stok,
             satuan: satuan
         };
 
         try {
-            const respon = await fetch(API_URL, { 
-                method: 'POST', 
-                body: JSON.stringify(payload) 
-            });
-            
+            const respon = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
             const hasil = await respon.json();
             
-            // Validasi ketat berdasarkan status asli dari Apps Script Anda
             if(hasil.status === "success") {
                 tunjukkanStatus('Sukses Sejati! ' + hasil.message + ' (ID: ' + hasil.produk_id + ')', 'success');
                 document.getElementById('nama_produk').value = '';
@@ -144,7 +191,50 @@
                 tunjukkanStatus('Gagal Ditolak Server: ' + hasil.message, 'error');
             }
         } catch (e) { 
-            tunjukkanStatus('Kesalahan Jaringan / Parsing: ' + e.message, 'error'); 
+            tunjukkanStatus('Kesalahan Jaringan: ' + e.message, 'error'); 
+        }
+    }
+
+    // FUNGSI 2: AMBIL DAFTAR PRODUK (GET)
+    async function muatDaftarProduk() {
+        tunjukkanStatus('Mengambil data dari Google Sheets...', 'info');
+        const tbody = document.getElementById('tabel_produk_body');
+        
+        try {
+            // Karena Apps Script GET memakai URL Parameter ?action=getProduk
+            const respon = await fetch(`${API_URL}?action=getProduk`, { method: 'GET' });
+            const hasil = await respon.json();
+            
+            if(hasil.status === "success") {
+                tbody.innerHTML = ""; // Bersihkan tabel lama
+                
+                if(hasil.data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" style="text-align: center;">Gudang kosong. Belum ada produk.</td></tr>`;
+                    tunjukkanStatus('Data berhasil dimuat (Gudang Kosong).', 'success');
+                    return;
+                }
+
+                // Susun baris tabel dari data Google Sheets
+                hasil.data.forEach(item => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${item.toko_id || '-'}</strong></td>
+                        <td style="color:#4a5568;">${item.produk_id || '-'}</td>
+                        <td>${item.nama_produk || '-'}</td>
+                        <td><code>${item.sku || '-'}</code></td>
+                        <td>Rp ${(Number(item.harga_jual) || 0).toLocaleString('id-ID')}</td>
+                        <td><span class="badge-stok">${item.stok || '0'}</span> ${item.satuan || ''}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                tunjukkanStatus('Daftar stok berhasil diperbarui!', 'success');
+                setTimeout(() => { document.getElementById('status_box').style.display = 'none'; }, 3000);
+            } else {
+                tunjukkanStatus('Gagal memuat data: ' + hasil.message, 'error');
+            }
+        } catch (e) {
+            tunjukkanStatus('Gagal terhubung ke API (Pastikan Web App sudah Deploy): ' + e.message, 'error');
         }
     }
 </script>
