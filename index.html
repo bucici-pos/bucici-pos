@@ -705,7 +705,9 @@ function tutupNota(){
     hasil.data.forEach(item=>{
 
         html += `
-        <div class="prod-list-row">
+        html += `
+<div class="prod-list-row"
+onclick="lihatDetail('${item.penjualan_id}','${item.nomor_transaksi}')">
 
             <div>
 
@@ -727,6 +729,28 @@ function tutupNota(){
     });
 
     document.getElementById("list-transaksi").innerHTML = html;
+
+}
+async function lihatDetail(id, nota){
+
+    const res = await fetch(API_URL + "?action=detailTransaksi&id=" + id);
+
+    const hasil = await res.json();
+
+    let isi = "NOTA : " + nota + "\n\n";
+
+    hasil.data.forEach(item=>{
+
+        isi += item.nama_produk + "\n";
+        isi += item.qty + " x Rp " + item.harga.toLocaleString("id-ID") + "\n";
+        isi += "Rp " + item.subtotal.toLocaleString("id-ID") + "\n\n";
+
+    });
+
+    isi += "=====================\n";
+    isi += "TOTAL : Rp " + hasil.total.toLocaleString("id-ID");
+
+    alert(isi);
 
 }
     </script>
