@@ -794,9 +794,62 @@ Terima kasih telah berbelanja 🙏
     document.getElementById("modal-detail").style.display = "block";
 
 }
-function tutupDetail(){
+function tutupDetail()
+    function cetakNota(){
 
-    document.getElementById("modal-detail").style.display = "none";
+    const isi = document.getElementById("print-area").innerHTML;
+
+    const win = window.open("", "_blank", "width=400,height=700");
+
+    win.document.write(`
+        <html>
+        <head>
+
+        <title>Nota</title>
+
+        <style>
+
+        body{
+
+            font-family:monospace;
+
+            width:300px;
+
+            margin:20px auto;
+
+            font-size:14px;
+
+        }
+
+        hr{
+
+            border:1px dashed #000;
+
+        }
+
+        </style>
+
+        </head>
+
+        <body>
+
+        ${isi}
+
+        </body>
+
+        </html>
+    `);
+
+    win.document.close();
+
+    win.focus();
+
+    win.print();
+
+    win.close();
+
+}
+{document.getElementById("modal-detail").style.display = "none";
 
 }        
     </script>
@@ -806,11 +859,15 @@ function tutupDetail(){
 
         <h3 style="margin-top:0;">🧾 Detail Transaksi</h3>
 
-        <div id="detail-transaksi-content"></div>
+        <div id="print-area">
+
+    <div id="detail-transaksi-content"></div>
+
+</div>
 
         <div style="margin-top:20px;text-align:right;">
 
-            <button onclick="window.print()">🖨 Cetak</button>
+            <button onclick="cetakNota()">🖨 Cetak</button>
 
             <button onclick="tutupDetail()">Tutup</button>
 
