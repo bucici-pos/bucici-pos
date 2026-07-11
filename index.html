@@ -48,7 +48,7 @@
         <div id="tab-lihat" class="tab-item" onclick="gantiTab('lihat')">Lihat Daftar Stok</div>
     </div>
 
-    <!-- BOX NOTIFIKASI JUJUR -->
+    <!-- BOX NOTIFIKASI -->
     <div id="status_box" class="status"></div>
 
     <!-- TAB 1: FORM INPUT PRODUK -->
@@ -195,20 +195,19 @@
         }
     }
 
-    // FUNGSI 2: AMBIL DAFTAR PRODUK (GET)
+    // FUNGSI 2: AMBIL DAFTAR PRODUK (Disesuaikan dengan case 'produk' di Apps Script Anda)
     async function muatDaftarProduk() {
         tunjukkanStatus('Mengambil data dari Google Sheets...', 'info');
         const tbody = document.getElementById('tabel_produk_body');
         
         try {
-            // Karena Apps Script GET memakai URL Parameter ?action=getProduk
-            const respon = await fetch(`${API_URL}?action=getProduk`, { method: 'GET' });
+            const respon = await fetch(`${API_URL}?action=produk`, { method: 'GET' });
             const hasil = await respon.json();
             
             if(hasil.status === "success") {
                 tbody.innerHTML = ""; // Bersihkan tabel lama
                 
-                if(hasil.data.length === 0) {
+                if(!hasil.data || hasil.data.length === 0) {
                     tbody.innerHTML = `<tr><td colspan="6" style="text-align: center;">Gudang kosong. Belum ada produk.</td></tr>`;
                     tunjukkanStatus('Data berhasil dimuat (Gudang Kosong).', 'success');
                     return;
@@ -234,7 +233,7 @@
                 tunjukkanStatus('Gagal memuat data: ' + hasil.message, 'error');
             }
         } catch (e) {
-            tunjukkanStatus('Gagal terhubung ke API (Pastikan Web App sudah Deploy): ' + e.message, 'error');
+            tunjukkanStatus('Gagal terhubung ke API: ' + e.message, 'error');
         }
     }
 </script>
