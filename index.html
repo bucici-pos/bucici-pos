@@ -732,7 +732,23 @@ function tutupNota(){
 
     let html = "";
 
-    html += "<b>No Nota :</b> " + nota + "<br><br>";
+    html += `
+<div style="text-align:center">
+
+<h2 style="margin:0;">BUCICI POS</h2>
+
+<div>Dapur Bucici</div>
+
+<div>=====================</div>
+
+</div>
+
+<b>No Nota :</b> ${nota}<br>
+
+<b>Tanggal :</b> ${new Date().toLocaleString("id-ID")}<br>
+
+<hr>
+`;
 
     hasil.data.forEach(item=>{
 
@@ -758,9 +774,20 @@ function tutupNota(){
 
     });
 
-    html += "<hr>";
+    html += `
+<hr>
 
-    html += "<h3>Total : Rp " + hasil.total.toLocaleString("id-ID") + "</h3>";
+<div style="display:flex;justify-content:space-between;font-weight:bold;">
+    <span>TOTAL</span>
+    <span>Rp ${hasil.total.toLocaleString("id-ID")}</span>
+</div>
+
+<br>
+
+<div style="text-align:center;font-size:12px;color:#666;">
+Terima kasih telah berbelanja 🙏
+</div>
+`;
 
     document.getElementById("detail-transaksi-content").innerHTML = html;
 
