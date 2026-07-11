@@ -3,132 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BUCICI POS v2 - Dashboard Mitra</title>
+    <title>BUCICI POS v2 - Sistem Kasir Multi-Tenant</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 400px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #2c3e50; margin-bottom: 20px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
-        button { width: 100%; padding: 12px; background: #27ae60; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        button:hover { background: #219150; }
-        .kamar { border-top: 2px dashed #ddd; margin-top: 25px; padding-top: 20px; }
-        .status { margin-top: 15px; padding: 10px; border-radius: 6px; font-size: 14px; text-align: center; display: none; }
-        .success { background: #d4edda; color: #155724; }
-        .error { background: #f8d7da; color: #721c24; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 15px; color: #333; }
+        .container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        h2, h3 { text-align: center; color: #1a365d; margin-top: 0; }
+        .tab-menu { display: table; width: 100%; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; }
+        .tab-item { display: table-cell; text-align: center; padding: 10px; cursor: pointer; font-weight: bold; color: #718096; font-size: 14px; }
+        .tab-item.active { color: #2b6cb0; border-bottom: 3px solid #2b6cb0; }
+        .kamar-box { display: none; }
+        .kamar-box.active { display: block; }
+        .form-group { margin-bottom: 15px; position: relative; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: #4a5568; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 8px; box-sizing: border-box; font-size: 15px; }
+        input:focus, select:focus { border-color: #3182ce; outline: none; }
+        .pass-container { position: relative; }
+        .toggle-password { position: absolute; right: 12px; top: 10px; cursor: pointer; color: #718096; font-size: 18px; user-select: none; }
+        button { width: 100%; padding: 12px; background: #3182ce; color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        button:hover { background: #2b6cb0; }
+        .btn-green { background: #38a169; }
+        .btn-green:hover { background: #2f855a; }
+        .btn-purple { background: #805ad5; }
+        .btn-purple:hover { background: #6b46c1; }
+        .status { margin-top: 15px; padding: 12px; border-radius: 8px; font-size: 14px; text-align: center; display: none; font-weight: 500; }
+        .success { background: #c6f6d5; color: #22543d; border: 1px solid #9ae6b4; }
+        .error { background: #fed7d7; color: #742a2a; border: 1px solid #feb2b2; }
+        .info { background: #ebf8ff; color: #2b6cb0; border: 1px solid #90cdf4; }
+        .nota-item { background: #f7fafc; padding: 10px; border-radius: 6px; margin-bottom: 10px; border: 1px solid #edf2f7; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h2>📊 BUCICI POS v2</h2>
+    <p style="text-align:center; font-size:12px; color:#718096; margin-top:-10px;">Sistem Kasir Pintar Multi-Tenant</p>
     
-    <!-- KAMAR 1: PENDAFTARAN MITRA -->
-    <div class="form-group">
-        <label>Nama Pemilik (Mitra):</label>
-        <input type="text" id="nama_mitra" placeholder="Contoh: Budi Pemilik Warung">
-    </div>
-    <div class="form-group">
-        <label>Email Dagang:</label>
-        <input type="email" id="email_mitra" placeholder="Contoh: budi@email.com">
-    </div>
-    <div class="form-group">
-        <label>Kata Sandi:</label>
-        <input type="password" id="pass_mitra" placeholder="Masukkan password">
-    </div>
-    <button onclick="daftarMitra()">🚪 Kunci Pintu Akun (Daftar)</button>
-
-    <!-- KAMAR 2: SETUP TOKO -->
-    <div class="kamar">
-        <h3>🏪 Kamar Toko Baru</h3>
-        <div class="form-group">
-            <label>ID Mitra Anda:</label>
-            <input type="text" id="res_mitra_id" placeholder="Otomatis terisi setelah daftar" readonly>
-        </div>
-        <div class="form-group">
-            <label>Nama Toko / Warung:</label>
-            <input type="text" id="nama_toko" placeholder="Contoh: Warung Makan Budi">
-        </div>
-        <div class="form-group">
-            <label>Jenis Usaha:</label>
-            <select id="jenis_usaha">
-                <option value="Makanan & Minuman">Makanan & Minuman</option>
-                <option value="Kelontong / Retail">Kelontong / Retail</option>
-                <option value="Jasa / Pakaian">Jasa / Pakaian</option>
-            </select>
-        </div>
-        <button onclick="buatToko()" style="background: #2980b9;">🏪 Buka Kamar Toko</button>
+    <!-- MENU NAVIGASI KAMAR -->
+    <div class="tab-menu">
+        <div class="tab-item active" onclick="bukaKamar('kamar-mitra')">Mitra & Toko</div>
+        <div class="tab-item" onclick="bukaKamar('kamar-produk')">Kelola Stok</div>
+        <div class="tab-item" onclick="bukaKamar('kamar-kasir')">Mesin Kasir</div>
     </div>
 
-    <!-- NOTIFIKASI SYSTEM -->
+    <!-- NOTIFIKASI SYSTEM UTAMA -->
     <div id="status_box" class="status"></div>
+
+    <!-- KAMAR 1: PENDAFTARAN MITRA & TOKO -->
+    <div id="kamar-mitra" class="kamar-box active">
+        <h3>🚪 Pendaftaran Akun & Toko</h3>
+        <div class="form-group">
+            <label>Nama Pemilik (Mitra):</label>
+            <input type="text" id="nama_mitra" placeholder="Contoh: Budi Pemilik Warung">
+        </div>
+        <div class="form-group">
+            <label>Email Dagang:</label>
+            <input type="email" id="email_mitra" placeholder="Contoh: budi@email.com">
+        </div>
+        <div class="form-group">
+            <label>Kata Sandi:</label>
+            <div class="pass-container">
+                <input type="password" id="pass_mitra" placeholder="Masukkan password">
+                <span class="toggle-password" onclick="intipPassword('pass_mitra')">👁️</span>
+            </div>
+        </div>
+        <button class="btn-green" onclick="daftarMitra()">🚪 Kunci Pintu Akun (Daftar)</button>
+
+        <div style="border-top: 2px dashed #e2e8f0; margin-top: 20px; padding-top: 15px;">
+            <div class="form-group">
+                <label>ID Mitra Anda (Gunakan ID ini untuk kelola produk & kasir):</label>
+                <input type="text" id="res_mitra_id" placeholder="Otomatis terisi / isi manual jika sudah punya">
+            </div>
+            <div class="form-group">
+                <label>Nama Toko / Warung:</label>
+                <input type="text" id="nama_toko" placeholder="Contoh: Warung Makan Budi">
+            </div>
+            <div class="form-group">
+                <label>Jenis Usaha:</label>
+                <select id="jenis_usaha">
+                    <option value="Makanan & Minuman">Makanan & Minuman</option>
+                    <option value="Kelontong / Retail">Kelontong / Retail</option>
+                    <option value="Jasa / Pakaian">Jasa / Pakaian</option>
+                </select>
+            </div>
+            <button onclick="buatToko()">🏪 Buka Kamar Toko Baru</button>
+        </div>
+    </div>
+
+    <!-- KAMAR 2: KELOLA STOK PRODUK -->
+    <div id="kamar-produk" class="kamar-box">
+        <h3>📦 Input & Kelola Stok Barang</h3>
+        <div class="form-group">
+            <label>Masukkan ID Mitra Anda:</label>
+            <input type="text" id="prod_mitra_id" placeholder="Masukkan ID Mitra Anda (cth: MTR001)">
+        </div>
+        <div class="form-group">
+            <label>Nama Barang / Produk:</label>
+            <input type="text" id="nama_produk" placeholder="Contoh: Kripik Singkong Bucici">
+        </div>
+        <div class="form-group">
+            <label>Harga Jual (Rp):</label>
+            <input type="number" id="harga_jual" placeholder="Contoh: 15000">
+        </div>
+        <div class="form-group">
+            <label>Jumlah Stok Awal:</label>
+            <input type="number" id="stok_awal" placeholder="Contoh: 50">
+        </div>
+        <button class="btn-purple" onclick="tambahProduk()">📥 Simpan Produk ke Gudang</button>
+    </div>
+
+    <!-- KAMAR 3: MESIN KASIR (INPUT NOTA) -->
+    <div id="kamar-kasir" class="kamar-box">
+        <h3>🛒 Mesin Input Nota Penjualan</h3>
+        <div class="form-group">
+            <label>Masukkan ID Mitra Anda:</label>
+            <input type="text" id="kasir_mitra_id" placeholder="Masukkan ID Mitra Anda (cth: MTR001)">
+        </div>
+        <div class="nota-item">
+            <div class="form-group">
+                <label>Masukkan ID Produk (dari Sheets):</label>
+                <input type="text" id="kasir_produk_id" placeholder="Contoh: PRD001">
+            </div>
+            <div class="form-group">
+                <label>Jumlah yang Dibeli (Qty):</label>
+                <input type="number" id="kasir_qty" placeholder="Contoh: 2" value="1">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Total Pembayaran Pelanggan (Rp):</label>
+            <input type="number" id="kasir_total" placeholder="Contoh: 30000">
+        </div>
+        <button onclick="buatNota()">🧾 Cetak & Potong Stok (Simpan Nota)</button>
+    </div>
 </div>
 
 <script>
-    // URL BACKEND UTAMA ANDA SUDAH TERPASANG DI SINI
+    // URL BACKEND API UTAMA GOOGLE APPS SCRIPT
     const API_URL = "https://script.google.com/macros/s/AKfycbztU-c0Jv6fDTNYWYNo69D1Lzogfyyoz-_KNL2g0C42eyiDDfb2aaA1TPQr8oYdGb-3/exec";
+
+    // FUNGSI NAVIGASI KAMAR
+    function bukaKamar(kamarId) {
+        document.querySelectorAll('.kamar-box').forEach(box => box.classList.remove('active'));
+        document.querySelectorAll('.tab-item').forEach(tab => tab.classList.remove('active'));
+        document.getElementById(kamarId).classList.add('active');
+        event.target.classList.add('active');
+        document.getElementById('status_box').style.display = 'none';
+        
+        // Sinkronisasi ID Mitra antar kamar otomatis biar pedagang ga ketik ulang
+        const idMitraAktif = document.getElementById('res_mitra_id').value;
+        if(idMitraAktif) {
+            document.getElementById('prod_mitra_id').value = idMitraAktif;
+            document.getElementById('kasir_mitra_id').value = idMitraAktif;
+        }
+    }
+
+    // FUNGSI INTIP PASSWORD (REQUEST REVISI)
+    function intipPassword(inputId) {
+        const input = document.getElementById(inputId);
+        if (input.type === "password") {
+            input.type = "text";
+        } else {
+            input.type = "password";
+        }
+    }
 
     function tunjukkanStatus(pesan, tipe) {
         const box = document.getElementById('status_box');
         box.innerText = pesan;
         box.className = 'status ' + tipe;
         box.style.display = 'block';
+        window.scrollTo(0, 0);
     }
 
+    // API KAMAR 1: DAFTAR MITRA
     async function daftarMitra() {
         const nama = document.getElementById('nama_mitra').value;
         const email = document.getElementById('email_mitra').value;
         const password = document.getElementById('pass_mitra').value;
-
         if(!nama || !email || !password) return alert('Mohon isi semua data pendaftaran!');
-
-        tunjukkanStatus('Sedang mengunci data akun...', 'success');
-
+        tunjukkanStatus('Sedang mengunci data akun...', 'info');
         try {
-            const respon = await fetch(API_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'register', nama, email, password })
-            });
+            const respon = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'register', nama, email, password }) });
             const data = await respon.json();
             if(data.mitra_id) {
                 document.getElementById('res_mitra_id').value = data.mitra_id;
-                tunjukkanStatus('Pendaftaran Sukses! ID Mitra Anda: ' + data.mitra_id + '. Sekarang silakan setup toko di bawah.', 'success');
-            } else {
-                tunjukkanStatus('Gagal mendaftar, coba lagi.', 'error');
-            }
-        } catch (e) {
-            tunjukkanStatus('Terjadi kesalahan koneksi API.', 'error');
-        }
+                tunjukkanStatus('Pendaftaran Sukses! ID Mitra Anda: ' + data.mitra_id + '. Silakan lanjut setup toko di bawah.', 'success');
+            } else { tunjukkanStatus('Gagal mendaftar: ' + (data.message || 'Coba lagi'), 'error'); }
+        } catch (e) { tunjukkanStatus('Terjadi kesalahan koneksi API.', 'error'); }
     }
 
+    // API KAMAR 1: BUAT TOKO
     async function buatToko() {
         const mitra_id = document.getElementById('res_mitra_id').value;
         const nama_toko = document.getElementById('nama_toko').value;
         const jenis_usaha = document.getElementById('jenis_usaha').value;
-
-        if(!mitra_id) return alert('Anda harus mendaftar akun di atas terlebih dahulu!');
-        if(!nama_toko) return alert('Mohon isi nama toko Anda!');
-
-        tunjukkanStatus('Sedang mendaftarkan toko Anda...', 'success');
-
+        if(!mitra_id || !nama_toko) return alert('Mohon isi ID Mitra dan Nama Toko!');
+        tunjukkanStatus('Sedang mendaftarkan toko...', 'info');
         try {
-            const respon = await fetch(API_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'create_toko', mitra_id, nama_toko, jenis_usaha })
-            });
+            const respon = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'create_toko', mitra_id, nama_toko, jenis_usaha }) });
             const data = await respon.json();
-            if(data.toko_id) {
-                tunjukkanStatus('Selamat! Toko berhasil dibuka dengan ID: ' + data.toko_id, 'success');
-            } else {
-                tunjukkanStatus('Gagal membuat toko, coba lagi.', 'error');
-            }
-        } catch (e) {
-            tunjukkanStatus('Terjadi kesalahan koneksi API.', 'error');
-        }
+            if(data.toko_id) { tununjukkanStatus('Selamat! Toko berhasil dibuka dengan ID: ' + data.toko_id + '. Anda sekarang bisa mulai memasukkan produk di menu "Kelola Stok"!', 'success'); }
+            else { tunjukkanStatus('Gagal membuat toko.', 'error'); }
+        } catch (e) { tunjukkanStatus('Terjadi kesalahan koneksi API.', 'error'); }
+    }
+
+    // API KAMAR 2: TAMBAH PRODUK (STOK)
+    async function tambahProduk() {
+        const mitra_id = document.getElementById('prod_mitra_id').value;
+        const nama_produk = document.getElementById('nama_produk').value;
+        const harga_jual = document.getElementById('harga_jual').value;
+        const stok_awal = document.getElementById('stok_awal').value;
+        if(!mitra_id || !nama_produk || !harga_jual || !stok_awal) return alert('Mohon lengkapi semua data produk!');
+        tunjukkanStatus('Sedang mendaftarkan produk ke gudang...', 'info');
+        try {
+            const respon = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'add_produk', mitra_id, nama_produk, harga_jual: Number(harga_jual), stok_awal: Number(stok_awal) }) });
+            const data = await respon.json();
+            if(data.produk_id) { 
+                tunjukkanStatus('Sukses! Produk tersimpan dengan ID: ' + data.produk_id + '. Catat ID Produk ini untuk transaksi di mesin kasir!', 'success');
+                document.getElementById('nama_produk').value = '';
+                document.getElementById('harga_jual').value = '';
+                document.getElementById('stok_awal').value = '';
+            } else { tunjukkanStatus('Gagal menyimpan produk.', 'error'); }
+        } catch (e) { tunjukkanStatus('Terjadi kesalahan koneksi API.', 'error'); }
+    }
+
+    // API KAMAR 3: MESIN KASIR (BUAT NOTA & POTONG STOK)
+    async function buatNota() {
+        const mitra_id = document.getElementById('kasir_mitra_id').value;
+        const produk_id = document.getElementById('kasir_produk_id').value;
+        const qty = document.getElementById('kasir_qty').value;
+        const total_bayar = document.getElementById('kasir_total').value;
+        if(!mitra_id || !produk_id || !qty || !total_bayar) return alert('Mohon lengkapi seluruh data transaksi kasir!');
+        tunjukkanStatus('Memproses transaksi & memotong stok di sistem...', 'info');
+        try {
+            const respon = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'create_nota', mitra_id, produk_id, qty: Number(qty), total_bayar: Number(total_bayar) }) });
+            const data = await respon.json();
+            if(data.nota_id) { 
+                tunjukkanStatus('Transaksi Berhasil! Nota dicetak dengan ID: ' + data.nota_id + '. Stok di Google Sheets otomatis terpotong!', 'success');
+                document.getElementById('kasir_produk_id').value = '';
+                document.getElementById('kasir_qty').value = '1';
+                document.getElementById('kasir_total').value = '';
+            } else { tunjukkanStatus('Gagal transaksi: ' + (data.message || 'Coba cek stok/ID produk Anda'), 'error'); }
+        } catch (e) { tunjukkanStatus('Terjadi kesalahan koneksi API.', 'error'); }
     }
 </script>
 
 </body>
-              </html>
-              
+</html>
