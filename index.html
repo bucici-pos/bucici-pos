@@ -14,6 +14,7 @@
             --gray-bg: #f7fafc;
             --border: #e2e8f0;
             --text-muted: #718096;
+            --danger: #e53e3e;
         }
 
         * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
@@ -31,15 +32,13 @@
             align-items: center;
             justify-content: space-between;
         }
-        .btn-toggle {
-            background: none; border: none; font-size: 24px; cursor: pointer; color: var(--dark); padding: 0 5px;
-        }
+        .btn-toggle { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--dark); padding: 0 5px; }
         .mobile-title { font-weight: bold; font-size: 16px; color: var(--primary); }
 
         /* WRAPPER UTAMA SYSTEM */
         .app-wrapper { display: block; position: relative; min-height: 100vh; }
 
-        /* SIDEBAR NAVIGATION (Drawer Style di Mobile, Fixed di Desktop) */
+        /* SIDEBAR NAVIGATION */
         .sidebar {
             width: 260px;
             background: white;
@@ -60,26 +59,15 @@
         .menu-group { margin-bottom: 20px; }
         .menu-label { font-size: 11px; font-weight: bold; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; padding-left: 10px; }
         .menu-item {
-            display: block;
-            padding: 12px 15px;
-            color: var(--dark);
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 4px;
-            cursor: pointer;
-            transition: all 0.2s;
+            display: block; padding: 12px 15px; color: var(--dark); text-decoration: none; border-radius: 8px;
+            font-size: 14px; font-weight: 500; margin-bottom: 4px; cursor: pointer; transition: all 0.2s;
         }
         .menu-item:hover { background-color: var(--gray-bg); }
         .menu-item.active { background-color: var(--primary-light); color: var(--primary); font-weight: bold; }
 
-        /* OVERLAY SIDEBAR DI MOBILE */
-        .sidebar-overlay {
-            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 99;
-        }
+        .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 99; }
 
-        /* KONTEN UTAMA Halaman */
+        /* KONTEN UTAMA */
         .main-content { margin-left: 260px; padding: 25px; min-height: 100vh; }
         .kamar-section { display: none; }
         .kamar-section.active { display: block; }
@@ -87,73 +75,78 @@
         .card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
         .card-title { margin-top: 0; margin-bottom: 15px; font-size: 16px; color: var(--dark); border-bottom: 2px solid var(--gray-bg); padding-bottom: 8px; }
 
-        /* KLASIFIKASI KASIR POS (CARD & LIST) */
-        .pos-header-actions { display: block; margin-bottom: 15px; text-align: right; }
-        .btn-view-toggle { background: white; border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; }
-        
-        .pos-layout { display: block; }
-        .pos-products { width: 100%; margin-bottom: 20px; }
+        /* POS LAYOUT DUA KOLOM (KASIR) */
+        .pos-container { display: flex; gap: 20px; align-items: flex-start; }
+        .pos-main { flex: 3; }
+        .pos-sidebar { flex: 2; position: sticky; top: 20px; }
+
+        .pos-header-actions { display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center; }
+        .btn-view-toggle { background: white; border: 1px solid var(--border); padding: 8px 14px; border-radius: 6px; font-size: 13px; cursor: pointer; font-weight: 500; }
         
         /* Grid Mode */
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
-        .prod-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 12px; text-align: center; cursor: pointer; }
-        .prod-card img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; background: #edf2f7; margin-bottom: 8px; }
-        .prod-card-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+        .prod-card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 15px; text-align: center; cursor: pointer; transition: transform 0.1s; }
+        .prod-card:active { transform: scale(0.95); }
+        .prod-card-icon { font-size: 28px; margin-bottom: 8px; }
+        .prod-card-name { font-size: 13px; font-weight: 600; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .prod-card-price { font-size: 12px; color: var(--primary); font-weight: bold; }
         
         /* List Mode */
-        .product-list { display: block; }
-        .prod-list-row { display: block; padding: 12px; background: white; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; cursor: pointer; }
-        
-        /* POSM MARKETING GADGET */
-        .marketing-preview { background: #e2e8f0; width: 100%; max-width: 300px; height: 300px; margin: 15px auto; display: block; position: relative; border-radius: 8px; overflow: hidden; }
-        .mkt-canvas-text { position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; color: white; background: rgba(0,0,0,0.6); padding: 10px; font-weight: bold; }
+        .product-list { display: none; }
+        .prod-list-row { display: flex; justify-content: space-between; align-items: center; padding: 14px; background: white; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; cursor: pointer; }
 
-        /* CHATBOT ASISTEN AI STYLE */
-        .chat-container { border: 1px solid var(--border); border-radius: 8px; height: 350px; display: block; overflow-y: auto; background: var(--gray-bg); padding: 15px; margin-bottom: 10px; }
-        .chat-bubble { max-width: 85%; padding: 10px 14px; border-radius: 12px; margin-bottom: 10px; font-size: 13px; line-height: 1.4; display: block; }
-        .chat-bubble.user { background: var(--primary); color: white; margin-left: auto; }
-        .chat-bubble.ai { background: white; border: 1px solid var(--border); margin-right: auto; }
-        .chat-input-box { display: block; }
-        .chat-input-box input { width: 80%; padding: 10px; border: 1px solid var(--border); border-radius: 8px 0 0 8px; float: left; }
-        .chat-input-box button { width: 20%; padding: 10px; background: var(--primary); color: white; border: none; border-radius: 0 8px 8px 0; cursor: pointer; }
+        /* KERANJANG BELANJA */
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--border); font-size: 13px; }
+        .cart-total-box { margin-top: 15px; padding-top: 15px; border-top: 2px solid var(--border); display: flex; justify-content: space-between; font-weight: bold; font-size: 15px; }
 
-        /* FORM UMUM */
-        .form-group { margin-bottom: 12px; }
-        label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: var(--text-muted); }
-        input, select { width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; }
-        button.btn-primary { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; }
+        /* TOAST NOTIFICATION (MODERN APP STYLE) */
+        .toast-container {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: rgba(45, 55, 72, 0.95); color: white; padding: 12px 24px;
+            border-radius: 30px; font-size: 13px; font-weight: 500; z-index: 9999;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: none; text-align: center;
+        }
 
-        /* DASHBOARD RINGKASAN WIDGETS */
+        /* DASHBOARD WIDGETS */
         .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
         .widget { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 15px; text-align: center; }
         .widget-val { font-size: 18px; font-weight: bold; color: var(--primary); margin-top: 5px; }
 
-        /* RESPONSIVE LAYOUT UNTUK HP ANDROID */
+        /* FORM UMUM */
+        .form-group { margin-bottom: 12px; }
+        label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: var(--text-muted); }
+        input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; }
+        button.btn-primary { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; }
+
+        /* RESPONSIVE LAYOUT UNTUK HP */
         @media (max-width: 768px) {
             .mobile-header { display: flex; }
             .sidebar { transform: translateX(-100%); }
             .sidebar.open { transform: translateX(0); }
             .sidebar-overlay.open { display: block; }
             .main-content { margin-left: 0; padding: 15px; }
+            .pos-container { flex-direction: column; }
+            .pos-sidebar { flex: none; width: 100%; position: relative; top: 0; margin-top: 20px; }
             .product-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
 <body>
 
-    <!-- HEADER MOBILE (Hanya muncul di HP) -->
+    <!-- NOTIFIKASI TOAST GAYA APLIKASI ASLI -->
+    <div id="app-toast" class="toast-container"></div>
+
+    <!-- HEADER MOBILE -->
     <div class="mobile-header">
         <button class="btn-toggle" onclick="toggleSidebar()">☰</button>
-        <div class="mobile-title" id="judul_kamar_mobile">📊 Dashboard</div>
+        <div class="mobile-title" id="judul_kamar_mobile">🏠 Dashboard</div>
         <div style="width:24px;"></div>
     </div>
 
     <div class="app-wrapper">
-        <!-- BACKDROP OVERLAY OVER MOBILE DRAWER -->
         <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
 
-        <!-- AMBASSADOR SIDEBAR MENU BAR -->
+        <!-- SIDEBAR MENU -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-brand">
                 <h2>📊 BUCICI POS v2</h2>
@@ -167,74 +160,54 @@
                 <div class="menu-item" id="menu-produk" onclick="pindahKamar('produk')">📦 Kamar Produk</div>
                 <div class="menu-item" id="menu-keuangan" onclick="pindahKamar('keuangan')">💰 Kamar Keuangan</div>
             </div>
-
-            <div class="menu-group">
-                <div class="menu-label">Ekstensi Cerdas</div>
-                <div class="menu-item" id="menu-marketing" onclick="pindahKamar('marketing')">📣 Kamar Marketing</div>
-                <div class="menu-item" id="menu-ai" onclick="pindahKamar('ai')">🤖 Asisten AI BUCICI</div>
-            </div>
         </div>
 
-        <!-- AREA UTAMA TEMPAT SEGALA KAMAR BERADA -->
+        <!-- AREA UTAMA -->
         <div class="main-content">
 
             <!-- 1. KAMAR DASHBOARD -->
             <div id="kamar-dash" class="kamar-section active">
                 <div class="dash-grid">
-                    <div class="widget">
-                        <label>Omzet Hari Ini</label>
-                        <div class="widget-val">Rp 450.000</div>
-                    </div>
-                    <div class="widget">
-                        <label>Untung Bersih</label>
-                        <div class="widget-val" style="color:var(--success);">Rp 185.000</div>
-                    </div>
-                    <div class="widget">
-                        <label>Total Transaksi</label>
-                        <div class="widget-val">27 Nota</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-title">📈 Produk Terlaris</div>
-                    <p style="font-size:14px; margin:5px 0;">1. Ayam Goreng Pejantan (12 porsi)</p>
-                    <p style="font-size:14px; margin:5px 0;">2. Ayam Kremes (9 porsi)</p>
-                    <p style="font-size:14px; margin:5px 0;">3. Es Jeruk (6 gelas)</p>
+                    <div class="widget"><label>Omzet Hari Ini</label><div class="widget-val">Rp 0</div></div>
+                    <div class="widget"><label>Untung Bersih</label><div class="widget-val" style="color:var(--success);">Rp 0</div></div>
+                    <div class="widget"><label>Total Transaksi</label><div class="widget-val">0 Nota</div></div>
                 </div>
             </div>
 
             <!-- 2. KAMAR KASIR -->
             <div id="kamar-kasir" class="kamar-section">
-                <div class="pos-header-actions">
-                    <button class="btn-view-toggle" id="btn-toggle-view" onclick="togglePosView()">📋 Mode: Grid</button>
-                </div>
-
-                <div class="pos-layout">
-                    <div class="pos-products">
-                        <!-- Tampilan Grid Menu -->
-                        <div id="pos-grid-wrapper" class="product-grid">
-                            <div class="prod-card" onclick="alert('Ditambahkan ke keranjang')">
-                                <div style="font-size:24px; padding:10px 0;">🍗</div>
-                                <div class="prod-card-name">Ayam Goreng</div>
-                                <div class="prod-card-price">Rp 15.000</div>
-                            </div>
-                            <div class="prod-card" onclick="alert('Ditambahkan ke keranjang')">
-                                <div style="font-size:24px; padding:10px 0;">🍹</div>
-                                <div class="prod-card-name">Es Jeruk</div>
-                                <div class="prod-card-price">Rp 5.000</div>
-                            </div>
+                <div class="pos-container">
+                    
+                    <!-- Sisi Kiri: Galeri Menu Pilihan -->
+                    <div class="pos-main">
+                        <div class="pos-header-actions">
+                            <button class="btn-view-toggle" onclick="ambilMenuKasir()">🔄 Ambil Menu Terbaru</button>
+                            <button class="btn-view-toggle" id="btn-toggle-view" onclick="togglePosView()">📋 Mode: Grid</button>
                         </div>
+                        
+                        <div id="loading-pos" style="text-align:center; padding:30px; color:var(--text-muted);">Silakan klik "Ambil Menu Terbaru" untuk sinkronisasi data...</div>
 
-                        <!-- Tampilan List Menu (Bisa disembunyikan via JS) -->
-                        <div id="pos-list-wrapper" class="product-list" style="display:none;">
-                            <div class="prod-list-row" onclick="alert('Ditambahkan ke keranjang')">
-                                <strong>🍗 Ayam Goreng</strong> - Rp 15.000
+                        <!-- Grid Tampilan Menu -->
+                        <div id="pos-grid-wrapper" class="product-grid"></div>
+                        <!-- List Tampilan Menu -->
+                        <div id="pos-list-wrapper" class="product-list"></div>
+                    </div>
+
+                    <!-- Sisi Kanan: Struk Keranjang Belanja Sementara -->
+                    <div class="pos-sidebar">
+                        <div class="card">
+                            <div class="card-title">📝 Struk Belanjaan</div>
+                            <div id="cart-items-list" style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px 0;">
+                                Keranjang masih kosong. Klik produk di kiri.
                             </div>
-                            <div class="prod-list-row" onclick="alert('Ditambahkan ke keranjang')">
-                                <strong>🍹 Es Jeruk</strong> - Rp 5.000
+                            <div class="cart-total-box">
+                                <span>Total Tagihan:</span>
+                                <span id="cart-total-price">Rp 0</span>
                             </div>
+                            <button class="btn-primary" style="margin-top:15px;" onclick="showToast('Fitur Bayar & Simpan Nota menyusul di tahap selanjutnya!')">💵 Proses Pembayaran</button>
                         </div>
                     </div>
+
                 </div>
             </div>
 
@@ -242,7 +215,7 @@
             <div id="kamar-produk" class="kamar-section">
                 <div class="card">
                     <div class="card-title">📦 Kelola Inventori Barang</div>
-                    <p style="font-size:13px; color:var(--text-muted);">Gunakan form atau tabel stok seperti versi sebelumnya di sini.</p>
+                    <p style="font-size:13px; color:var(--text-muted);">Inventori utama terpantau otomatis melalui database awan.</p>
                 </div>
             </div>
 
@@ -250,46 +223,9 @@
             <div id="kamar-keuangan" class="kamar-section">
                 <div class="card">
                     <div class="card-title">💸 Catat Pengeluaran Operasional</div>
-                    <div class="form-group">
-                        <label>Nama Pengeluaran</label>
-                        <input type="text" placeholder="Contoh: Beli Minyak Goreng 2L">
-                    </div>
-                    <div class="form-group">
-                        <label>Nominal (Rp)</label>
-                        <input type="number" placeholder="Contoh: 35000">
-                    </div>
+                    <div class="form-group"><label>Nama Pengeluaran</label><input type="text" placeholder="Beli Minyak Goreng"></div>
+                    <div class="form-group"><label>Nominal (Rp)</label><input type="number" placeholder="35000"></div>
                     <button class="btn-primary">Simpan Pengeluaran</button>
-                </div>
-            </div>
-
-            <!-- 5. KAMAR MARKETING -->
-            <div id="kamar-marketing" class="kamar-section">
-                <div class="card">
-                    <div class="card-title">📣 Generator Brosur & POSM Digital</div>
-                    <div class="form-group">
-                        <label>Teks Promo Utama</label>
-                        <input type="text" id="mkt-text-input" oninput="updateMarketingBanner()" value="DISKON MANTAP JUMAT BERKAH!">
-                    </div>
-                    <div class="marketing-preview">
-                        <div class="mkt-canvas-text" id="mkt-canvas-preview">DISKON MANTAP JUMAT BERKAH!</div>
-                    </div>
-                    <button class="btn-primary" onclick="alert('Gambar berhasil di-render & siap cetak!')">💾 Unduh Brosur Siap Cetak</button>
-                </div>
-            </div>
-
-            <!-- 6. KAMAR ASISTEN AI -->
-            <div id="kamar-ai" class="kamar-section">
-                <div class="card">
-                    <div class="card-title">🤖 Brain Asisten Pintar BUCICI</div>
-                    <div class="chat-container">
-                        <div class="chat-bubble ai">
-                            Halo Pemilik <strong>BUCICI</strong>! Saya asisten pintarmu. Saya bisa menganalisis omzet, sisa stok, atau sekadar memberikan tips trik menaikkan margin penjualan warungmu. Ada yang bisa dibantu?
-                        </div>
-                    </div>
-                    <div class="chat-input-box">
-                        <input type="text" placeholder="Tanyakan tren penjualan atau cara restok barang...">
-                        <button onclick="alert('Pesan dikirim! Integrasi LLM Engine menyusul pada tahap logic.')">Kirim</button>
-                    </div>
                 </div>
             </div>
 
@@ -297,37 +233,124 @@
     </div>
 
     <script>
-        // FUNGSI NAVIGASI KAMAR (Single Page Application Logic)
-        function pindahKamar(namaKamar) {
-            // Sembunyikan semua kamar
-            const semuakamar = document.querySelectorAll('.kamar-section');
-            semuakamar.forEach(k => k.classList.remove('active'));
-            
-            // Matikan semua keaktifan tombol menu
-            const semuamenu = document.querySelectorAll('.menu-item');
-            semuamenu.forEach(m => m.classList.remove('active'));
+        const API_URL = "https://script.google.com/macros/s/AKfycbyBtqz72q3woSFcpTJwuiMfL_OW07jVbowsj7Nomwf9Ko3Pekye1YxNFbw77SbzibMZ/exec";
+        let daftarProdukGlobal = [];
+        let keranjangBelanja = [];
 
-            // Aktifkan kamar dan menu yang dipilih
-            document.getElementById('kamar-' + namaKamar).classList.add('active');
-            document.getElementById('menu-' + namaKamar).classList.add('active');
-
-            // Ubah judul di header mobile
-            const txtMenu = document.getElementById('menu-' + namaKamar).innerText;
-            document.getElementById('judul_kamar_mobile').innerText = txtMenu;
-
-            // Jika di mobile, otomatis tutup kembali laci drawer-nya setelah diklik
-            if(window.innerWidth <= 768) {
-                toggleSidebar();
-            }
+        // FUNGSI TOAST NOTIFICATION GAYA APLIKASI ASLI (PENGGANTI ALERT)
+        function showToast(pesan) {
+            const toast = document.getElementById('app-toast');
+            toast.innerText = pesan;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 2000); // Hilang otomatis dalam 2 detik
         }
 
-        // FUNGSI BUKA TUTUP DRAWER SIDEBAR DI HP
+        // NAVIGASI KAMAR AUTOMATION
+        function pindahKamar(namaKamar) {
+            document.querySelectorAll('.kamar-section').forEach(k => k.classList.remove('active'));
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            document.getElementById('kamar-' + namaKamar).classList.add('active');
+            document.getElementById('menu-' + namaKamar).classList.add('active');
+            document.getElementById('judul_kamar_mobile').innerText = document.getElementById('menu-' + namaKamar).innerText;
+            if(window.innerWidth <= 768) toggleSidebar();
+            if(namaKamar === 'kasir' && daftarProdukGlobal.length === 0) ambilMenuKasir();
+        }
+
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');
             document.getElementById('overlay').classList.toggle('open');
         }
 
-        // FUNGSI TOGGLE ANTARA GRID & LIST VIEW DI KAMAR KASIR
+        // AMBIL DATA DARI GOOGLE SHEETS UNTUK DIJADIKAN MENU KASIR
+        async function ambilMenuKasir() {
+            document.getElementById('loading-pos').style.display = 'block';
+            document.getElementById('loading-pos').innerText = "Sedang menyelaraskan menu...";
+            
+            try {
+                const respon = await fetch(`${API_URL}?action=produk`, { method: 'GET' });
+                const hasil = await respon.json();
+                
+                if(hasil.status === "success") {
+                    daftarProdukGlobal = hasil.data;
+                    renderMenuKasir();
+                    document.getElementById('loading-pos').style.display = 'none';
+                    showToast("Menu berhasil diperbarui!");
+                }
+            } catch (e) {
+                document.getElementById('loading-pos').innerText = "Gagal mengambil menu: " + e.message;
+            }
+        }
+
+        // MERENDER TAMPILAN MENU KASIR SECARA REAL DATA
+        function renderMenuKasir() {
+            const gridWrapper = document.getElementById('pos-grid-wrapper');
+            const listWrapper = document.getElementById('pos-list-wrapper');
+            gridWrapper.innerHTML = "";
+            listWrapper.innerHTML = "";
+
+            if(daftarProdukGlobal.length === 0) {
+                gridWrapper.innerHTML = "<p>Gudang kosong.</p>";
+                return;
+            }
+
+            daftarProdukGlobal.forEach(item => {
+                const harga = Number(item.harga_jual) || 0;
+                const ikon = item.kategori === 'Minuman' ? '🍹' : '🍗';
+
+                // Render Elemen Grid
+                const card = document.createElement('div');
+                card.className = "prod-card";
+                card.onclick = () => tambahKeKeranjang(item.sku, item.nama_produk, harga);
+                card.innerHTML = `<div class="prod-card-icon">${ikon}</div><div class="prod-card-name">${item.nama_produk}</div><div class="prod-card-price">Rp ${harga.toLocaleString('id-ID')}</div>`;
+                gridWrapper.appendChild(card);
+
+                // Render Elemen List
+                const row = document.createElement('div');
+                row.className = "prod-list-row";
+                row.onclick = () => tambahKeKeranjang(item.sku, item.nama_produk, harga);
+                row.innerHTML = `<span>${ikon} <strong>${item.nama_produk}</strong></span><span>Rp ${harga.toLocaleString('id-ID')}</span>`;
+                listWrapper.appendChild(row);
+            });
+        }
+
+        // LOGIC KERANJANG BELANJA KASIR
+        function tambahKeKeranjang(sku, nama, harga) {
+            const itemAda = keranjangBelanja.find(i => i.sku === sku);
+            if(itemAda) {
+                itemAda.qty++;
+            } else {
+                keranjangBelanja.push({ sku: sku, nama: nama, harga: harga, qty: 1 });
+            }
+            showToast(`${nama} ditambahkan.`);
+            updateTampilanKeranjang();
+        }
+
+        function updateTampilanKeranjang() {
+            const listContainer = document.getElementById('cart-items-list');
+            const totalContainer = document.getElementById('cart-total-price');
+            listContainer.innerHTML = "";
+
+            if(keranjangBelanja.length === 0) {
+                listContainer.innerHTML = "Keranjang masih kosong. Klik produk di kiri.";
+                totalContainer.innerText = "Rp 0";
+                return;
+            }
+
+            let totalHarga = 0;
+            keranjangBelanja.forEach(item => {
+                const subtotal = item.harga * item.qty;
+                totalHarga += subtotal;
+
+                const row = document.createElement('div');
+                row.className = "cart-item";
+                row.innerHTML = `<span>${item.nama} x${item.qty}</span><span>Rp ${subtotal.toLocaleString('id-ID')}</span>`;
+                listContainer.appendChild(row);
+            });
+
+            totalContainer.innerText = "Rp " + totalHarga.toLocaleString('id-ID');
+        }
+
+        // TOGGLE DUA MODE PANDANGAN POS (GRID & LIST)
         let currentPosView = 'grid';
         function togglePosView() {
             const btn = document.getElementById('btn-toggle-view');
@@ -346,13 +369,7 @@
                 listWrap.style.display = "none";
             }
         }
-
-        // LIVE PREVIEW TEKS MARKETING POSTER
-        function updateMarketingBanner() {
-            const inputVal = document.getElementById('mkt-text-input').value;
-            document.getElementById('mkt-canvas-preview').innerText = inputVal;
-        }
     </script>
 </body>
-                                </html>
-                                
+    </html>
+    
