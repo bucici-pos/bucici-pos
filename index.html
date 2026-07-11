@@ -30,6 +30,8 @@
         .error { background: #fed7d7; color: #742a2a; border: 1px solid #feb2b2; }
         .info { background: #ebf8ff; color: #2b6cb0; border: 1px solid #90cdf4; }
         .nota-item { background: #f7fafc; padding: 10px; border-radius: 6px; margin-bottom: 10px; border: 1px solid #edf2f7; }
+        .row-grid { display: flex; gap: 10px; }
+        .row-grid .form-group { flex: 1; }
     </style>
 </head>
 <body>
@@ -89,39 +91,61 @@
         </div>
     </div>
 
-    <!-- KAMAR 2: KELOLA STOK PRODUK -->
+    <!-- KAMAR 2: KELOLA STOK PRODUK (STRUKTUR SESUAI PRODUK.GS) -->
     <div id="kamar-produk" class="kamar-box">
         <h3>📦 Input & Kelola Stok Barang</h3>
         <div class="form-group">
-            <label>Masukkan ID Mitra Anda:</label>
-            <input type="text" id="prod_mitra_id" placeholder="Masukkan ID Mitra Anda (cth: MTR004)">
+            <label>Masukkan ID Toko Anda (Wajib):</label>
+            <input type="text" id="prod_toko_id" placeholder="Contoh: TOKO001 atau TKO001">
         </div>
         <div class="form-group">
             <label>Nama Barang / Produk:</label>
-            <input type="text" id="nama_produk" placeholder="Contoh: Kripik Singkong Bucici">
+            <input type="text" id="nama_produk" placeholder="Contoh: Es Kikik">
         </div>
-        <div class="form-group">
-            <label>Harga Jual (Rp):</label>
-            <input type="number" id="harga_jual" placeholder="Contoh: 15000">
+        <div class="row-grid">
+            <div class="form-group">
+                <label>Kategori:</label>
+                <input type="text" id="kategori_produk" placeholder="Contoh: Minuman">
+            </div>
+            <div class="form-group">
+                <label>SKU / Kode Barang:</label>
+                <input type="text" id="sku_produk" placeholder="Contoh: KK01">
+            </div>
         </div>
-        <div class="form-group">
-            <label>Jumlah Stok Awal:</label>
-            <input type="number" id="stok_awal" placeholder="Contoh: 50">
+        <div class="row-grid">
+            <div class="form-group">
+                <label>Harga Beli (Rp):</label>
+                <input type="number" id="harga_beli" placeholder="0" value="0">
+            </div>
+            <div class="form-group">
+                <label>Harga Jual (Rp):</label>
+                <input type="number" id="harga_jual" placeholder="Contoh: 5000">
+            </div>
+        </div>
+        <div class="row-grid">
+            <div class="form-group">
+                <label>Jumlah Stok:</label>
+                <input type="number" id="stok_produk" placeholder="0" value="10">
+            </div>
+            <div class="form-group">
+                <label>Satuan:</label>
+                <input type="text" id="satuan_produk" placeholder="Contoh: Pcs / Botol" value="Pcs">
+            </div>
         </div>
         <button class="btn-purple" onclick="tambahProduk()">📥 Simpan Produk ke Gudang</button>
     </div>
 
-    <!-- KAMAR 3: MESIN KASIR (INPUT NOTA) -->
+    <!-- KAMAR 3: MESIN KASIR -->
     <div id="kamar-kasir" class="kamar-box">
         <h3>🛒 Mesin Input Nota Penjualan</h3>
         <div class="form-group">
-            <label>Masukkan ID Mitra Anda:</label>
-            <input type="text" id="kasir_mitra_id" placeholder="Masukkan ID Mitra Anda (cth: MTR004)">
+            <label>Masukkan ID Toko Anda:</label>
+            <input type="text" id="kasir_toko_id" placeholder="Contoh: TOKO001">
         </div>
         <div class="nota-item">
             <div class="form-group">
                 <label>Masukkan ID Produk (dari Sheets):</label>
-                <input type="text" id="kasir_produk_id" placeholder="Contoh: PRD001">
+                <input type="text" id="kasir_produk_id" placeholder="Contoh: PRD004">
             </div>
             <div class="form-group">
                 <label>Jumlah yang Dibeli (Qty):</label>
@@ -130,7 +154,7 @@
         </div>
         <div class="form-group">
             <label>Total Pembayaran Pelanggan (Rp):</label>
-            <input type="number" id="kasir_total" placeholder="Contoh: 30000">
+            <input type="number" id="kasir_total" placeholder="Contoh: 10000">
         </div>
         <button onclick="buatNota()">🧾 Cetak & Potong Stok (Simpan Nota)</button>
     </div>
@@ -145,12 +169,6 @@
         document.getElementById(kamarId).classList.add('active');
         if(event) { event.target.classList.add('active'); }
         document.getElementById('status_box').style.display = 'none';
-        
-        const idMitraAktif = document.getElementById('res_mitra_id').value;
-        if(idMitraAktif) {
-            document.getElementById('prod_mitra_id').value = idMitraAktif;
-            document.getElementById('kasir_mitra_id').value = idMitraAktif;
-        }
     }
 
     function intipPassword(inputId) {
@@ -197,58 +215,62 @@
     }
 
     async function tambahProduk() {
-        const mitra_id = document.getElementById('prod_mitra_id').value;
+        const toko_id = document.getElementById('prod_toko_id').value;
         const nama_produk = document.getElementById('nama_produk').value;
+        const kategori = document.getElementById('kategori_produk').value;
+        const sku = document.getElementById('sku_produk').value;
+        const harga_beli = document.getElementById('harga_beli').value;
         const harga_jual = document.getElementById('harga_jual').value;
-        const stok_awal = document.getElementById('stok_awal').value;
-        if(!mitra_id || !nama_produk || !harga_jual || !stok_awal) return alert('Mohon lengkapi semua data produk!');
+        const stok = document.getElementById('stok_produk').value;
+        const satuan = document.getElementById('satuan_produk').value;
+
+        if(!toko_id || !nama_produk || !harga_jual) return alert('ID Toko, Nama Produk, dan Harga Jual wajib diisi!');
         tunjukkanStatus('Sedang memasukkan produk ke sistem...', 'info');
         
         try {
-            // DISESUAIKAN DENGAN SKRIP: MENGGUNAKAN 'createProduk' SESUAI BARIS 32 KODE.GS ANDA
             await fetch(API_URL, { 
                 method: 'POST', 
                 body: JSON.stringify({ 
                     action: 'createProduk', 
-                    mitra_id, 
+                    toko_id, 
                     nama_produk, 
+                    kategori,
+                    sku,
+                    harga_beli: Number(harga_beli),
                     harga_jual: Number(harga_jual), 
-                    stok_awal: Number(stok_awal) 
+                    stok: Number(stok),
+                    satuan
                 }) 
             });
             
             tunjukkanStatus('Sukses! Produk "'+nama_produk+'" berhasil disimpan di Gudang Google Sheets Anda!', 'success');
             document.getElementById('nama_produk').value = '';
+            document.getElementById('sku_produk').value = '';
             document.getElementById('harga_jual').value = '';
-            document.getElementById('stok_awal').value = '';
         } catch (e) { 
             tunjukkanStatus('Produk Berhasil Disimpan! Silakan cek tab 03_PRODUK di Google Sheets Anda.', 'success'); 
         }
     }
 
     async function buatNota() {
-        const mitra_id = document.getElementById('kasir_mitra_id').value;
+        const toko_id = document.getElementById('kasir_toko_id').value;
         const produk_id = document.getElementById('kasir_produk_id').value;
         const qty = document.getElementById('kasir_qty').value;
         const total_bayar = document.getElementById('kasir_total').value;
-        if(!mitra_id || !produk_id || !qty || !total_bayar) return alert('Mohon lengkapi seluruh data transaksi kasir!');
+        if(!toko_id || !produk_id || !qty || !total_bayar) return alert('Mohon lengkapi seluruh data transaksi kasir!');
         tunjukkanStatus('Memproses transaksi...', 'info');
         try {
             await fetch(API_URL, { 
                 method: 'POST', 
                 body: JSON.stringify({ 
-                    action: 'createNota', // Mengikuti pola camelCase skrip
-                    action_alt: 'buatNota',
-                    mitra_id, 
+                    action: 'createNota',
+                    toko_id, 
                     produk_id, 
                     qty: Number(qty), 
                     total_bayar: Number(total_bayar) 
                 }) 
             });
             tunjukkanStatus('Transaksi Sukses! Nota disimpan dan stok otomatis berkurang!', 'success');
-            document.getElementById('kasir_produk_id').value = '';
-            document.getElementById('kasir_qty').value = '1';
-            document.getElementById('kasir_total').value = '';
         } catch (e) { 
             tunjukkanStatus('Transaksi Sukses Terkirim! Silakan cek Google Sheets Anda.', 'success'); 
         }
