@@ -17,12 +17,8 @@
         label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: #4a5568; }
         input, select, textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 8px; box-sizing: border-box; font-size: 15px; }
         input:focus, select:focus { border-color: #3182ce; outline: none; }
-        .pass-container { position: relative; }
-        .toggle-password { position: absolute; right: 12px; top: 10px; cursor: pointer; color: #718096; font-size: 18px; user-select: none; }
         button { width: 100%; padding: 12px; background: #3182ce; color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
         button:hover { background: #2b6cb0; }
-        .btn-green { background: #38a169; }
-        .btn-green:hover { background: #2f855a; }
         .btn-purple { background: #805ad5; }
         .btn-purple:hover { background: #6b46c1; }
         .status { margin-top: 15px; padding: 12px; border-radius: 8px; font-size: 14px; text-align: center; display: none; font-weight: 500; }
@@ -39,140 +35,64 @@
     <h2>📊 BUCICI POS v2</h2>
     <p style="text-align:center; font-size:12px; color:#718096; margin-top:-10px;">Sistem Kasir Pintar Multi-Tenant</p>
     
-    <!-- MENU NAVIGASI KAMAR -->
     <div class="tab-menu">
-        <div class="tab-item active" onclick="bukaKamar('kamar-mitra')">Mitra & Toko</div>
-        <div class="tab-item" onclick="bukaKamar('kamar-produk')">Kelola Stok</div>
-        <div class="tab-item" onclick="bukaKamar('kamar-kasir')">Mesin Kasir</div>
+        <div class="tab-item active" onclick="bukaKamar('kamar-produk')">Kelola Stok</div>
     </div>
 
-    <!-- NOTIFIKASI SYSTEM UTAMA -->
+    <!-- NOTIFIKASI SYSTEM UTAMA (JUJUR & REALTIME) -->
     <div id="status_box" class="status"></div>
 
-    <!-- KAMAR 1: PENDAFTARAN MITRA & TOKO -->
-    <div id="kamar-mitra" class="kamar-box active">
-        <h3>🚪 Pendaftaran Akun & Toko</h3>
-        <div class="form-group">
-            <label>Nama Pemilik (Mitra):</label>
-            <input type="text" id="nama_mitra" placeholder="Contoh: Budi Pemilik Warung">
-        </div>
-        <div class="form-group">
-            <label>Email Dagang:</label>
-            <input type="email" id="email_mitra" placeholder="Contoh: budi@email.com">
-        </div>
-        <div class="form-group">
-            <label>Kata Sandi:</label>
-            <div class="pass-container">
-                <input type="password" id="pass_mitra" placeholder="Masukkan password">
-                <span class="toggle-password" onclick="intipPassword('pass_mitra')">👁️</span>
-            </div>
-        </div>
-        <button class="btn-green" onclick="daftarMitra()">🚪 Kunci Pintu Akun (Daftar)</button>
-
-        <div style="border-top: 2px dashed #e2e8f0; margin-top: 20px; padding-top: 15px;">
-            <div class="form-group">
-                <label>ID Mitra Anda:</label>
-                <input type="text" id="res_mitra_id" placeholder="Otomatis terisi / isi manual jika sudah punya">
-            </div>
-            <div class="form-group">
-                <label>Nama Toko / Warung:</label>
-                <input type="text" id="nama_toko" placeholder="Contoh: Warung Makan Budi">
-            </div>
-            <div class="form-group">
-                <label>Jenis Usaha:</label>
-                <select id="jenis_usaha">
-                    <option value="Makanan & Minuman">Makanan & Minuman</option>
-                    <option value="Kelontong / Retail">Kelontong / Retail</option>
-                    <option value="Jasa / Pakaian">Jasa / Pakaian</option>
-                </select>
-            </div>
-            <button onclick="buatToko()">🏪 Buka Kamar Toko Baru</button>
-        </div>
-    </div>
-
-    <!-- KAMAR 2: KELOLA STOK PRODUK -->
-    <div id="kamar-produk" class="kamar-box">
+    <!-- KAMAR KELOLA STOK PRODUK -->
+    <div id="kamar-produk" class="kamar-box active">
         <h3>📦 Input & Kelola Stok Barang</h3>
         <div class="form-group">
-            <label>Masukkan ID Toko Anda (Lihat di tab 02_TOKO, cth: TKO002):</label>
-            <input type="text" id="prod_toko_id" placeholder="Contoh: TKO002">
+            <label>Masukkan ID Toko Anda (Wajib):</label>
+            <input type="text" id="prod_toko_id" placeholder="Contoh: TKO002" value="TKO002">
         </div>
         <div class="form-group">
             <label>Nama Barang / Produk:</label>
-            <input type="text" id="nama_produk" placeholder="Contoh: Es Kikik">
+            <input type="text" id="nama_produk" placeholder="Contoh: Ayam Goreng Mentega">
         </div>
         <div class="row-grid">
             <div class="form-group">
                 <label>Kategori:</label>
-                <input type="text" id="kategori_produk" placeholder="Contoh: Minuman">
+                <input type="text" id="kategori_produk" value="Makanan">
             </div>
             <div class="form-group">
                 <label>SKU / Kode Barang:</label>
-                <input type="text" id="sku_produk" placeholder="Contoh: EK01">
+                <input type="text" id="sku_produk" placeholder="Contoh: AG03">
             </div>
         </div>
         <div class="row-grid">
             <div class="form-group">
                 <label>Harga Beli (Rp):</label>
-                <input type="text" id="harga_beli" placeholder="0" value="0">
+                <input type="text" id="harga_beli" value="10000">
             </div>
             <div class="form-group">
                 <label>Harga Jual (Rp):</label>
-                <input type="text" id="harga_jual" placeholder="Contoh: 5000">
+                <input type="text" id="harga_jual" placeholder="Contoh: 16000">
             </div>
         </div>
         <div class="row-grid">
             <div class="form-group">
                 <label>Jumlah Stok:</label>
-                <input type="text" id="stok_produk" placeholder="0" value="20">
+                <input type="text" id="stok_produk" value="20">
             </div>
             <div class="form-group">
                 <label>Satuan:</label>
-                <input type="text" id="satuan_produk" placeholder="Contoh: gelas / pcs" value="pcs">
+                <input type="text" id="satuan_produk" value="porsi">
             </div>
         </div>
         <button class="btn-purple" onclick="tambahProduk()">📥 Simpan Produk ke Gudang</button>
     </div>
-
-    <!-- KAMAR 3: MESIN KASIR -->
-    <div id="kamar-kasir" class="kamar-box">
-        <h3>🛒 Mesin Input Nota Penjualan</h3>
-        <div class="form-group">
-            <label>Masukkan ID Toko Anda:</label>
-            <input type="text" id="kasir_toko_id" placeholder="Contoh: TKO001">
-        </div>
-        <div class="nota-item">
-            <div class="form-group">
-                <label>Masukkan ID Produk (dari Sheets):</label>
-                <input type="text" id="kasir_produk_id" placeholder="Contoh: PRD001">
-            </div>
-            <div class="form-group">
-                <label>Jumlah yang Dibeli (Qty):</label>
-                <input type="number" id="kasir_qty" placeholder="Contoh: 1" value="1">
-            </div>
-        </div>
-        <div class="form-group">
-            <label>Total Pembayaran Pelanggan (Rp):</label>
-            <input type="number" id="kasir_total" placeholder="Contoh: 10000">
-        </div>
-        <button onclick="buatNota()">🧾 Cetak & Potong Stok (Simpan Nota)</button>
-    </div>
 </div>
 
 <script>
+    // URL Web App Fresh yang Baru Saja Anda Daftarkan
     const API_URL = "https://script.google.com/macros/s/AKfycbyBtqz72q3woSFcpTJwuiMfL_OW07jVbowsj7Nomwf9Ko3Pekye1YxNFbw77SbzibMZ/exec";
 
     function bukaKamar(kamarId) {
-        document.querySelectorAll('.kamar-box').forEach(box => box.classList.remove('active'));
-        document.querySelectorAll('.tab-item').forEach(tab => tab.classList.remove('active'));
-        document.getElementById(kamarId).classList.add('active');
-        if(event) { event.target.classList.add('active'); }
         document.getElementById('status_box').style.display = 'none';
-    }
-
-    function intipPassword(inputId) {
-        const input = document.getElementById(inputId);
-        input.type = (input.type === "password") ? "text" : "password";
     }
 
     function tunjukkanStatus(pesan, tipe) {
@@ -180,37 +100,6 @@
         box.innerText = pesan;
         box.className = 'status ' + tipe;
         box.style.display = 'block';
-        window.scrollTo(0, 0);
-    }
-
-    async function daftarMitra() {
-        const nama = document.getElementById('nama_mitra').value;
-        const email = document.getElementById('email_mitra').value;
-        const password = document.getElementById('pass_mitra').value;
-        if(!nama || !email || !password) return alert('Mohon isi semua data pendaftaran!');
-        tunjukkanStatus('Sedang mengunci data akun...', 'info');
-        try {
-            const respon = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'register', nama, email, password }) });
-            const data = await respon.json();
-            if(data.mitra_id) {
-                document.getElementById('res_mitra_id').value = data.mitra_id;
-                tunjukkanStatus('Pendaftaran Sukses! ID Mitra Anda: ' + data.mitra_id, 'success');
-            } else { tunjukkanStatus('Gagal: ' + (data.message || 'Coba lagi'), 'error'); }
-        } catch (e) { tunjukkanStatus('Terjadi kesalahan koneksi API.', 'error'); }
-    }
-
-    async function buatToko() {
-        const mitra_id = document.getElementById('res_mitra_id').value;
-        const nama_toko = document.getElementById('nama_toko').value;
-        const jenis_usaha = document.getElementById('jenis_usaha').value;
-        if(!mitra_id || !nama_toko) return alert('Mohon isi ID Mitra dan Nama Toko!');
-        tunjukkanStatus('Sedang mendaftarkan toko...', 'info');
-        try {
-            await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'create_toko', mitra_id, nama_toko, jenis_usaha }) });
-            tunjukkanStatus('Selamat! Toko "'+nama_toko+'" berhasil dibuka.', 'success');
-        } catch (e) { 
-            tunjukkanStatus('Proses Toko Selesai!', 'success'); 
-        }
     }
 
     async function tambahProduk() {
@@ -224,11 +113,10 @@
         const satuan = document.getElementById('satuan_produk').value;
 
         if(!toko_id || !nama_produk || !harga_jual) return alert('ID Toko, Nama Produk, dan Harga Jual wajib diisi!');
-        tunjukkanStatus('Sedang memasukkan produk ke sistem...', 'info');
+        tunjukkanStatus('Menghubungkan ke database Google Sheets...', 'info');
         
-        // MENGIRIM DATA SEBAGAI STRING AGAR BERHASIL DI-TRIM OLEH APPS SCRIPT
         const payload = {
-            action: 'createProduk',
+            action: 'createProduk', // Dicocokkan dengan case 'createProduk' di Kode.gs Anda
             toko_id: String(toko_id),
             nama_produk: String(nama_produk),
             kategori: String(kategori),
@@ -244,47 +132,23 @@
                 method: 'POST', 
                 body: JSON.stringify(payload) 
             });
+            
             const hasil = await respon.json();
             
-            if(hasil.status === "success") {
-                tunjukkanStatus('Sukses! ' + hasil.message, 'success');
+            if(hasil.status === "success" || hasil.produk_id) {
+                tunjukkanStatus('Sukses! Produk "' + nama_produk + '" berhasil disimpan ke database.', 'success');
                 document.getElementById('nama_produk').value = '';
                 document.getElementById('sku_produk').value = '';
                 document.getElementById('harga_jual').value = '';
             } else {
-                tunjukkanStatus('Gagal dari database: ' + hasil.message, 'error');
+                tunjukkanStatus('Ditolak Server Database: ' + hasil.message, 'error');
             }
         } catch (e) { 
-            // Fallback jikalau CORS aktif namun data sebenarnya berhasil masuk
-            tunjukkanStatus('Perintah terkirim! Silakan periksa tab 03_PRODUK di Google Sheets Anda.', 'success'); 
-        }
-    }
-
-    async function buatNota() {
-        const toko_id = document.getElementById('kasir_toko_id').value;
-        const produk_id = document.getElementById('kasir_produk_id').value;
-        const qty = document.getElementById('kasir_qty').value;
-        const total_bayar = document.getElementById('kasir_total').value;
-        if(!toko_id || !produk_id || !qty || !total_bayar) return alert('Mohon lengkapi seluruh data transaksi kasir!');
-        tunjukkanStatus('Memproses transaksi...', 'info');
-        try {
-            await fetch(API_URL, { 
-                method: 'POST', 
-                body: JSON.stringify({ 
-                    action: 'createNota',
-                    toko_id, 
-                    produk_id, 
-                    qty: Number(qty), 
-                    total_bayar: Number(total_bayar) 
-                }) 
-            });
-            tunjukkanStatus('Transaksi Selesai Diproses!', 'success');
-        } catch (e) { 
-            tunjukkanStatus('Transaksi Sukses Terkirim!', 'success'); 
+            // Error asli tanpa rekayasa
+            tunjukkanStatus('Gagal memproses request. Detail kendala: ' + e.message, 'error'); 
         }
     }
 </script>
 
 </body>
-    </html>
-    
+</html>
