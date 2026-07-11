@@ -36,13 +36,13 @@
     <p style="text-align:center; font-size:12px; color:#718096; margin-top:-10px;">Sistem Kasir Pintar Multi-Tenant</p>
     
     <div class="tab-menu">
-        <div class="tab-item active" onclick="bukaKamar('kamar-produk')">Kelola Stok</div>
+        <div class="tab-item active">Kelola Stok</div>
     </div>
 
-    <!-- NOTIFIKASI SYSTEM UTAMA (JUJUR & REALTIME) -->
+    <!-- BOX NOTIFIKASI JUJUR -->
     <div id="status_box" class="status"></div>
 
-    <!-- KAMAR KELOLA STOK PRODUK -->
+    <!-- FORM INPUT PRODUK -->
     <div id="kamar-produk" class="kamar-box active">
         <h3>📦 Input & Kelola Stok Barang</h3>
         <div class="form-group">
@@ -88,12 +88,7 @@
 </div>
 
 <script>
-    // URL Web App Fresh yang Baru Saja Anda Daftarkan
     const API_URL = "https://script.google.com/macros/s/AKfycbyBtqz72q3woSFcpTJwuiMfL_OW07jVbowsj7Nomwf9Ko3Pekye1YxNFbw77SbzibMZ/exec";
-
-    function bukaKamar(kamarId) {
-        document.getElementById('status_box').style.display = 'none';
-    }
 
     function tunjukkanStatus(pesan, tipe) {
         const box = document.getElementById('status_box');
@@ -103,28 +98,32 @@
     }
 
     async function tambahProduk() {
-        const toko_id = document.getElementById('prod_toko_id').value;
-        const nama_produk = document.getElementById('nama_produk').value;
-        const kategori = document.getElementById('kategori_produk').value;
-        const sku = document.getElementById('sku_produk').value;
-        const harga_beli = document.getElementById('harga_beli').value;
-        const harga_jual = document.getElementById('harga_jual').value;
-        const stok = document.getElementById('stok_produk').value;
-        const satuan = document.getElementById('satuan_produk').value;
+        const toko_id = document.getElementById('prod_toko_id').value.trim();
+        const nama_produk = document.getElementById('nama_produk').value.trim();
+        const kategori = document.getElementById('kategori_produk').value.trim();
+        const sku = document.getElementById('sku_produk').value.trim();
+        const harga_beli = document.getElementById('harga_beli').value.trim();
+        const harga_jual = document.getElementById('harga_jual').value.trim();
+        const stok = document.getElementById('stok_produk').value.trim();
+        const satuan = document.getElementById('satuan_produk').value.trim();
 
-        if(!toko_id || !nama_produk || !harga_jual) return alert('ID Toko, Nama Produk, dan Harga Jual wajib diisi!');
-        tunjukkanStatus('Menghubungkan ke database Google Sheets...', 'info');
+        if(!toko_id || !nama_produk || !harga_jual) {
+            return alert('ID Toko, Nama Produk, dan Harga Jual wajib diisi!');
+        }
         
+        tunjukkanStatus('Menyimpan ke Google Sheets...', 'info');
+        
+        // PAYLOAD DISESUAIKAN TOTAL DENGAN HAMPARAN VARIABEL DI PRODUK.GS Anda
         const payload = {
-            action: 'createProduk', // Dicocokkan dengan case 'createProduk' di Kode.gs Anda
-            toko_id: String(toko_id),
-            nama_produk: String(nama_produk),
-            kategori: String(kategori),
-            sku: String(sku),
-            harga_beli: String(harga_beli),
-            harga_jual: String(harga_jual),
-            stok: String(stok),
-            satuan: String(satuan)
+            action: 'createProduk',
+            toko_id: toko_id,
+            nama_produk: nama_produk,
+            kategori: kategori,
+            sku: sku,
+            harga_beli: harga_beli,  // Menggunakan snake_case
+            harga_jual: harga_jual,  // Menggunakan snake_case
+            stok: stok,
+            satuan: satuan
         };
 
         try {
@@ -135,17 +134,17 @@
             
             const hasil = await respon.json();
             
-            if(hasil.status === "success" || hasil.produk_id) {
-                tunjukkanStatus('Sukses! Produk "' + nama_produk + '" berhasil disimpan ke database.', 'success');
+            // Validasi ketat berdasarkan status asli dari Apps Script Anda
+            if(hasil.status === "success") {
+                tunjukkanStatus('Sukses Sejati! ' + hasil.message + ' (ID: ' + hasil.produk_id + ')', 'success');
                 document.getElementById('nama_produk').value = '';
                 document.getElementById('sku_produk').value = '';
                 document.getElementById('harga_jual').value = '';
             } else {
-                tunjukkanStatus('Ditolak Server Database: ' + hasil.message, 'error');
+                tunjukkanStatus('Gagal Ditolak Server: ' + hasil.message, 'error');
             }
         } catch (e) { 
-            // Error asli tanpa rekayasa
-            tunjukkanStatus('Gagal memproses request. Detail kendala: ' + e.message, 'error'); 
+            tunjukkanStatus('Kesalahan Jaringan / Parsing: ' + e.message, 'error'); 
         }
     }
 </script>
