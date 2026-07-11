@@ -444,6 +444,58 @@ Transaksi Baru
                 if(hasil.status === "success") {
                     document.getElementById('dash-omzet').innerText = "Rp " + Number(hasil.omzet).toLocaleString('id-ID');
                     document.getElementById('dash-transaksi').innerText = hasil.total_transaksi + " Nota";
+                    const riwayat = document.getElementById("dash-riwayat");
+
+if(
+    hasil.transaksi_terakhir &&
+    hasil.transaksi_terakhir.length > 0
+){
+
+    riwayat.innerHTML = "";
+
+    hasil.transaksi_terakhir
+    .reverse()
+    .forEach(item=>{
+
+
+        riwayat.innerHTML += `
+
+        <div style="
+        display:flex;
+        justify-content:space-between;
+        padding:10px 0;
+        border-bottom:1px solid #eee;
+        ">
+
+            <div>
+                <b>${item.nomor_transaksi}</b>
+                <br>
+                <small>
+                ${new Date(item.tanggal)
+                .toLocaleString("id-ID")}
+                </small>
+            </div>
+
+
+            <div>
+                Rp ${Number(item.total)
+                .toLocaleString("id-ID")}
+            </div>
+
+        </div>
+
+        `;
+
+
+    });
+
+
+}
+else{
+
+    riwayat.innerHTML="Belum ada transaksi.";
+
+}
                 }
             } catch (e) {
                 console.log("Dashboard belum terintegrasi API laporan penuh.");
