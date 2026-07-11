@@ -724,30 +724,74 @@ function tutupNota(){
 
     document.getElementById("list-transaksi").innerHTML = html;
 
-}
-async function lihatDetail(id, nota){
+}async function lihatDetail(id, nota){
 
     const res = await fetch(API_URL + "?action=detailTransaksi&id=" + id);
 
     const hasil = await res.json();
 
-    let isi = "NOTA : " + nota + "\n\n";
+    let html = "";
+
+    html += "<b>No Nota :</b> " + nota + "<br><br>";
 
     hasil.data.forEach(item=>{
 
-        isi += item.nama_produk + "\n";
-        isi += item.qty + " x Rp " + item.harga.toLocaleString("id-ID") + "\n";
-        isi += "Rp " + item.subtotal.toLocaleString("id-ID") + "\n\n";
+        html += `
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+
+            <div>
+
+                ${item.nama_produk}<br>
+
+                ${item.qty} x Rp ${item.harga.toLocaleString("id-ID")}
+
+            </div>
+
+            <div>
+
+                Rp ${item.subtotal.toLocaleString("id-ID")}
+
+            </div>
+
+        </div>
+        `;
 
     });
 
-    isi += "=====================\n";
-    isi += "TOTAL : Rp " + hasil.total.toLocaleString("id-ID");
+    html += "<hr>";
 
-    alert(isi);
+    html += "<h3>Total : Rp " + hasil.total.toLocaleString("id-ID") + "</h3>";
+
+    document.getElementById("detail-transaksi-content").innerHTML = html;
+
+    document.getElementById("modal-detail").style.display = "block";
 
 }
+function tutupDetail(){
+
+    document.getElementById("modal-detail").style.display = "none";
+
+}        
     </script>
+    <div id="modal-detail" style="display:none;position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.45);z-index:9999;">
+
+    <div style="background:#fff;width:360px;max-width:95%;margin:40px auto;padding:20px;border-radius:12px;">
+
+        <h3 style="margin-top:0;">🧾 Detail Transaksi</h3>
+
+        <div id="detail-transaksi-content"></div>
+
+        <div style="margin-top:20px;text-align:right;">
+
+            <button onclick="window.print()">🖨 Cetak</button>
+
+            <button onclick="tutupDetail()">Tutup</button>
+
+        </div>
+
+    </div>
+
+</div>
 </body>
     </html>
     
