@@ -298,43 +298,63 @@
         }
 
         // ================= LOGIC KIRIM TRANSAKSI KE GOOGLE SHEETS =================
-        async function prosesPembayaran() {
-            if (keranjangBelanja.length === 0) {
-                showToast("Keranjang belanja masih kosong, Kapten!");
-                return;
-            }
+       async function prosesPembayaran() {
 
-            const btnBayar = document.getElementById('btn-proses-bayar');
-            btnBayar.innerText = "⏳ Menyimpan Nota...";
-            btnBayar.disabled = true;
+    if (keranjangBelanja.length === 0) {
+        showToast("Keranjang masih kosong.");
+        return;
+    }
 
-            // Bungkus data transaksi sesuai spesifikasi backend JSON BUCICI
-            const payload = {
-                action: "penjualan",
-                items: keranjangBelanja
-            };
+    const btn = document.getElementById("btn-proses-bayar");
 
-            try {
-                // Tembak POST request menggunakan proxy cors-anywhere / direct fetch jika Apps Script mengizinkan
-                const respon = await fetch(API_URL, {
-                    method: 'POST',
-                    mode: 'no-cors', // Digunakan untuk menghindari CORS block Apps Script redirect
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+    btn.disabled = true;
+    btn.innerText = "⏳ Menyimpan...";
 
-                // Karena mode 'no-cors' tidak mengembalikan data response, kita asumsikan sukses jika tidak melempar error catch
-                showToast("✅ Transaksi Berhasil Disimpan!");
-                keranjangBelanja = [];
-                updateTampilanKeranjang();
-                ambilDataDashboard(); // Update omzet di depan
-            } catch (error) {
-                showToast("❌ Gagal menyimpan transaksi.");
-            } finally {
-                btnBayar.innerText = "💵 Proses Pembayaran";
-                btnBayar.disabled = false;
-            }
+    try {
+
+        const payload = {
+            action: "penjualan",
+            items: keranjangBelanja
+        };
+
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const hasil = await response.json();
+
+        if (hasil.status === "success") {
+
+            showToast("✅ " + hasil.message);
+
+            keranjangBelanja = [];
+            updateTampilanKeranjang();
+
+            ambilMenuKasir();
+            ambilDataDashboard();
+
+        } else {
+
+            showToast("❌ " + hasil.message);
+
         }
+
+    } catch (err) {
+
+        console.error(err);
+
+        showToast("❌ Tidak dapat terhubung ke server.");
+
+    }
+
+    btn.disabled = false;
+    btn.innerText = "💵 Proses Pembayaran";
+
+}
 
         async function ambilDataDashboard() {
             try {
