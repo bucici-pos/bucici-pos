@@ -116,7 +116,61 @@
 <body>
 
     <div id="app-toast" class="toast-container"></div>
+<div id="nota-modal" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:rgba(0,0,0,.5);
+z-index:99999;
+align-items:center;
+justify-content:center;
+">
 
+    <div style="
+    background:white;
+    width:90%;
+    max-width:350px;
+    border-radius:12px;
+    padding:20px;
+    ">
+
+        <div style="text-align:center;font-weight:bold;font-size:18px;">
+            🍗 BUCICI POS
+        </div>
+
+        <div style="text-align:center;font-size:12px;color:#718096;margin-bottom:15px;">
+            Rumah Digital UMKM
+        </div>
+
+
+        <hr>
+
+
+        <div id="nota-content"></div>
+
+
+        <hr>
+
+
+        <button onclick="tutupNota()" style="
+        width:100%;
+        padding:12px;
+        border:none;
+        border-radius:8px;
+        background:#2b6cb0;
+        color:white;
+        font-weight:bold;
+        ">
+        Transaksi Baru
+        </button>
+
+
+    </div>
+
+</div>
     <div class="mobile-header">
         <button class="btn-toggle" onclick="toggleSidebar()">☰</button>
         <div class="mobile-title" id="judul_kamar_mobile">🏠 Dashboard</div>
@@ -326,9 +380,11 @@
 
         if (hasil.status === "success") {
 
-            showToast("✅ " + hasil.message);
 
-            keranjangBelanja = [];
+    tampilkanNota(hasil.data);
+
+
+    keranjangBelanja = [];
             updateTampilanKeranjang();
 
             ambilMenuKasir();
@@ -365,7 +421,89 @@
                 console.log("Dashboard belum terintegrasi API laporan penuh.");
             }
         }
+function tampilkanNota(data){
 
+    const modal = document.getElementById("nota-modal");
+    const content = document.getElementById("nota-content");
+
+
+    let html = `
+
+    <div style="font-size:13px;">
+        <b>No Nota:</b><br>
+        ${data.nomor_transaksi || "-"}
+    </div>
+
+    <br>
+
+    `;
+
+
+    keranjangBelanja.forEach(item=>{
+
+        html += `
+
+        <div style="
+        display:flex;
+        justify-content:space-between;
+        font-size:13px;
+        margin-bottom:5px;
+        ">
+
+        <span>
+        ${item.nama}<br>
+        ${item.qty} x ${item.harga.toLocaleString('id-ID')}
+        </span>
+
+        <span>
+        Rp ${(item.qty * item.harga)
+        .toLocaleString('id-ID')}
+        </span>
+
+        </div>
+
+        `;
+
+    });
+
+
+    html += `
+
+    <hr>
+
+    <div style="
+    display:flex;
+    justify-content:space-between;
+    font-weight:bold;
+    ">
+
+    <span>Total</span>
+
+    <span>
+    Rp ${Number(data.total)
+    .toLocaleString('id-ID')}
+    </span>
+
+    </div>
+
+    `;
+
+
+    content.innerHTML = html;
+
+
+    modal.style.display="flex";
+
+}
+
+
+
+function tutupNota(){
+
+    document.getElementById("nota-modal")
+    .style.display="none";
+
+}
         let currentPosView = 'grid';
         function togglePosView() {
             const btn = document.getElementById('btn-toggle-view');
