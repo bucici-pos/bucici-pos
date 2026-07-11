@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUCICI POS v2 - Dashboard Mitra</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 400px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2c3e50; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 12px; background: #27ae60; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        button:hover { background: #219150; }
+        .kamar { border-top: 2px dashed #ddd; margin-top: 25px; padding-top: 20px; }
+        .status { margin-top: 15px; padding: 10px; border-radius: 6px; font-size: 14px; text-align: center; display: none; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📊 BUCICI POS v2</h2>
+    
+    <!-- KAMAR 1: PENDAFTARAN MITRA -->
+    <div class="form-group">
+        <label>Nama Pemilik (Mitra):</label>
+        <input type="text" id="nama_mitra" placeholder="Contoh: Budi Pemilik Warung">
+    </div>
+    <div class="form-group">
+        <label>Email Dagang:</label>
+        <input type="email" id="email_mitra" placeholder="Contoh: budi@email.com">
+    </div>
+    <div class="form-group">
+        <label>Kata Sandi:</label>
+        <input type="password" id="pass_mitra" placeholder="Masukkan password">
+    </div>
+    <button onclick="daftarMitra()">🚪 Kunci Pintu Akun (Daftar)</button>
+
+    <!-- KAMAR 2: SETUP TOKO -->
+    <div class="kamar">
+        <h3>🏪 Kamar Toko Baru</h3>
+        <div class="form-group">
+            <label>ID Mitra Anda:</label>
+            <input type="text" id="res_mitra_id" placeholder="Otomatis terisi setelah daftar" readonly>
+        </div>
+        <div class="form-group">
+            <label>Nama Toko / Warung:</label>
+            <input type="text" id="nama_toko" placeholder="Contoh: Warung Makan Budi">
+        </div>
+        <div class="form-group">
+            <label>Jenis Usaha:</label>
+            <select id="jenis_usaha">
+                <option value="Makanan & Minuman">Makanan & Minuman</option>
+                <option value="Kelontong / Retail">Kelontong / Retail</option>
+                <option value="Jasa / Pakaian">Jasa / Pakaian</option>
+            </select>
+        </div>
+        <button onclick="buatToko()" style="background: #2980b9;">🏪 Buka Kamar Toko</button>
+    </div>
+
+    <!-- NOTIFIKASI SYSTEM -->
+    <div id="status_box" class="status"></div>
+</div>
+
+<script>
+    // URL BACKEND UTAMA ANDA SUDAH TERPASANG DI SINI
+    const API_URL = "https://script.google.com/macros/s/AKfycbztU-c0Jv6fDTNYWYNo69D1Lzogfyyoz-_KNL2g0C42eyiDDfb2aaA1TPQr8oYdGb-3/exec";
+
+    function tunjukkanStatus(pesan, tipe) {
+        const box = document.getElementById('status_box');
+        box.innerText = pesan;
+        box.className = 'status ' + tipe;
+        box.style.display = 'block';
+    }
+
+    async function daftarMitra() {
+        const nama = document.getElementById('nama_mitra').value;
+        const email = document.getElementById('email_mitra').value;
+        const password = document.getElementById('pass_mitra').value;
+
+        if(!nama || !email || !password) return alert('Mohon isi semua data pendaftaran!');
+
+        tunjukkanStatus('Sedang mengunci data akun...', 'success');
+
+        try {
+            const respon = await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'register', nama, email, password })
+            });
+            const data = await respon.json();
+            if(data.mitra_id) {
+                document.getElementById('res_mitra_id').value = data.mitra_id;
+                tunjukkanStatus('Pendaftaran Sukses! ID Mitra Anda: ' + data.mitra_id + '. Sekarang silakan setup toko di bawah.', 'success');
+            } else {
+                tunjukkanStatus('Gagal mendaftar, coba lagi.', 'error');
+            }
+        } catch (e) {
+            tunjukkanStatus('Terjadi kesalahan koneksi API.', 'error');
+        }
+    }
+
+    async function buatToko() {
+        const mitra_id = document.getElementById('res_mitra_id').value;
+        const nama_toko = document.getElementById('nama_toko').value;
+        const jenis_usaha = document.getElementById('jenis_usaha').value;
+
+        if(!mitra_id) return alert('Anda harus mendaftar akun di atas terlebih dahulu!');
+        if(!nama_toko) return alert('Mohon isi nama toko Anda!');
+
+        tunjukkanStatus('Sedang mendaftarkan toko Anda...', 'success');
+
+        try {
+            const respon = await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'create_toko', mitra_id, nama_toko, jenis_usaha })
+            });
+            const data = await respon.json();
+            if(data.toko_id) {
+                tunjukkanStatus('Selamat! Toko berhasil dibuka dengan ID: ' + data.toko_id, 'success');
+            } else {
+                tunjukkanStatus('Gagal membuat toko, coba lagi.', 'error');
+            }
+        } catch (e) {
+            tunjukkanStatus('Terjadi kesalahan koneksi API.', 'error');
+        }
+    }
+</script>
+
+</body>
+              </html>
+              
