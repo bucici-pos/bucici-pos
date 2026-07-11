@@ -29,7 +29,6 @@
         .success { background: #c6f6d5; color: #22543d; border: 1px solid #9ae6b4; }
         .error { background: #fed7d7; color: #742a2a; border: 1px solid #feb2b2; }
         .info { background: #ebf8ff; color: #2b6cb0; border: 1px solid #90cdf4; }
-        .nota-item { background: #f7fafc; padding: 10px; border-radius: 6px; margin-bottom: 10px; border: 1px solid #edf2f7; }
         .row-grid { display: flex; gap: 10px; }
         .row-grid .form-group { flex: 1; }
     </style>
@@ -72,7 +71,7 @@
 
         <div style="border-top: 2px dashed #e2e8f0; margin-top: 20px; padding-top: 15px;">
             <div class="form-group">
-                <label>ID Mitra Anda (Gunakan ID ini untuk kelola produk & kasir):</label>
+                <label>ID Mitra Anda:</label>
                 <input type="text" id="res_mitra_id" placeholder="Otomatis terisi / isi manual jika sudah punya">
             </div>
             <div class="form-group">
@@ -91,12 +90,12 @@
         </div>
     </div>
 
-    <!-- KAMAR 2: KELOLA STOK PRODUK (STRUKTUR SESUAI PRODUK.GS) -->
+    <!-- KAMAR 2: KELOLA STOK PRODUK -->
     <div id="kamar-produk" class="kamar-box">
         <h3>📦 Input & Kelola Stok Barang</h3>
         <div class="form-group">
-            <label>Masukkan ID Toko Anda (Wajib):</label>
-            <input type="text" id="prod_toko_id" placeholder="Contoh: TOKO001 atau TKO001">
+            <label>Masukkan ID Toko Anda (Lihat di tab 02_TOKO, cth: TKO002):</label>
+            <input type="text" id="prod_toko_id" placeholder="Contoh: TKO002">
         </div>
         <div class="form-group">
             <label>Nama Barang / Produk:</label>
@@ -109,27 +108,27 @@
             </div>
             <div class="form-group">
                 <label>SKU / Kode Barang:</label>
-                <input type="text" id="sku_produk" placeholder="Contoh: KK01">
+                <input type="text" id="sku_produk" placeholder="Contoh: EK01">
             </div>
         </div>
         <div class="row-grid">
             <div class="form-group">
                 <label>Harga Beli (Rp):</label>
-                <input type="number" id="harga_beli" placeholder="0" value="0">
+                <input type="text" id="harga_beli" placeholder="0" value="0">
             </div>
             <div class="form-group">
                 <label>Harga Jual (Rp):</label>
-                <input type="number" id="harga_jual" placeholder="Contoh: 5000">
+                <input type="text" id="harga_jual" placeholder="Contoh: 5000">
             </div>
         </div>
         <div class="row-grid">
             <div class="form-group">
                 <label>Jumlah Stok:</label>
-                <input type="number" id="stok_produk" placeholder="0" value="10">
+                <input type="text" id="stok_produk" placeholder="0" value="20">
             </div>
             <div class="form-group">
                 <label>Satuan:</label>
-                <input type="text" id="satuan_produk" placeholder="Contoh: Pcs / Botol" value="Pcs">
+                <input type="text" id="satuan_produk" placeholder="Contoh: gelas / pcs" value="pcs">
             </div>
         </div>
         <button class="btn-purple" onclick="tambahProduk()">📥 Simpan Produk ke Gudang</button>
@@ -140,16 +139,16 @@
         <h3>🛒 Mesin Input Nota Penjualan</h3>
         <div class="form-group">
             <label>Masukkan ID Toko Anda:</label>
-            <input type="text" id="kasir_toko_id" placeholder="Contoh: TOKO001">
+            <input type="text" id="kasir_toko_id" placeholder="Contoh: TKO001">
         </div>
         <div class="nota-item">
             <div class="form-group">
                 <label>Masukkan ID Produk (dari Sheets):</label>
-                <input type="text" id="kasir_produk_id" placeholder="Contoh: PRD004">
+                <input type="text" id="kasir_produk_id" placeholder="Contoh: PRD001">
             </div>
             <div class="form-group">
                 <label>Jumlah yang Dibeli (Qty):</label>
-                <input type="number" id="kasir_qty" placeholder="Contoh: 2" value="1">
+                <input type="number" id="kasir_qty" placeholder="Contoh: 1" value="1">
             </div>
         </div>
         <div class="form-group">
@@ -195,7 +194,7 @@
             const data = await respon.json();
             if(data.mitra_id) {
                 document.getElementById('res_mitra_id').value = data.mitra_id;
-                tunjukkanStatus('Pendaftaran Sukses! ID Mitra Anda: ' + data.mitra_id + '. Silakan lanjut setup toko di bawah.', 'success');
+                tunjukkanStatus('Pendaftaran Sukses! ID Mitra Anda: ' + data.mitra_id, 'success');
             } else { tunjukkanStatus('Gagal: ' + (data.message || 'Coba lagi'), 'error'); }
         } catch (e) { tunjukkanStatus('Terjadi kesalahan koneksi API.', 'error'); }
     }
@@ -208,9 +207,9 @@
         tunjukkanStatus('Sedang mendaftarkan toko...', 'info');
         try {
             await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'create_toko', mitra_id, nama_toko, jenis_usaha }) });
-            tunjukkanStatus('Selamat! Toko "'+nama_toko+'" berhasil dibuka. Lanjut ke menu Kelola Stok!', 'success');
+            tunjukkanStatus('Selamat! Toko "'+nama_toko+'" berhasil dibuka.', 'success');
         } catch (e) { 
-            tunjukkanStatus('Proses Toko Selesai! Silakan lanjut ke menu Kelola Stok.', 'success'); 
+            tunjukkanStatus('Proses Toko Selesai!', 'success'); 
         }
     }
 
@@ -227,28 +226,37 @@
         if(!toko_id || !nama_produk || !harga_jual) return alert('ID Toko, Nama Produk, dan Harga Jual wajib diisi!');
         tunjukkanStatus('Sedang memasukkan produk ke sistem...', 'info');
         
+        // MENGIRIM DATA SEBAGAI STRING AGAR BERHASIL DI-TRIM OLEH APPS SCRIPT
+        const payload = {
+            action: 'createProduk',
+            toko_id: String(toko_id),
+            nama_produk: String(nama_produk),
+            kategori: String(kategori),
+            sku: String(sku),
+            harga_beli: String(harga_beli),
+            harga_jual: String(harga_jual),
+            stok: String(stok),
+            satuan: String(satuan)
+        };
+
         try {
-            await fetch(API_URL, { 
+            const respon = await fetch(API_URL, { 
                 method: 'POST', 
-                body: JSON.stringify({ 
-                    action: 'createProduk', 
-                    toko_id, 
-                    nama_produk, 
-                    kategori,
-                    sku,
-                    harga_beli: Number(harga_beli),
-                    harga_jual: Number(harga_jual), 
-                    stok: Number(stok),
-                    satuan
-                }) 
+                body: JSON.stringify(payload) 
             });
+            const hasil = await respon.json();
             
-            tunjukkanStatus('Sukses! Produk "'+nama_produk+'" berhasil disimpan di Gudang Google Sheets Anda!', 'success');
-            document.getElementById('nama_produk').value = '';
-            document.getElementById('sku_produk').value = '';
-            document.getElementById('harga_jual').value = '';
+            if(hasil.status === "success") {
+                tunjukkanStatus('Sukses! ' + hasil.message, 'success');
+                document.getElementById('nama_produk').value = '';
+                document.getElementById('sku_produk').value = '';
+                document.getElementById('harga_jual').value = '';
+            } else {
+                tunjukkanStatus('Gagal dari database: ' + hasil.message, 'error');
+            }
         } catch (e) { 
-            tunjukkanStatus('Produk Berhasil Disimpan! Silakan cek tab 03_PRODUK di Google Sheets Anda.', 'success'); 
+            // Fallback jikalau CORS aktif namun data sebenarnya berhasil masuk
+            tunjukkanStatus('Perintah terkirim! Silakan periksa tab 03_PRODUK di Google Sheets Anda.', 'success'); 
         }
     }
 
@@ -270,9 +278,9 @@
                     total_bayar: Number(total_bayar) 
                 }) 
             });
-            tunjukkanStatus('Transaksi Sukses! Nota disimpan dan stok otomatis berkurang!', 'success');
+            tunjukkanStatus('Transaksi Selesai Diproses!', 'success');
         } catch (e) { 
-            tunjukkanStatus('Transaksi Sukses Terkirim! Silakan cek Google Sheets Anda.', 'success'); 
+            tunjukkanStatus('Transaksi Sukses Terkirim!', 'success'); 
         }
     }
 </script>
