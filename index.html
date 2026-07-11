@@ -429,40 +429,75 @@ function tampilkanNota(data){
 
     let html = `
 
-    <div style="font-size:13px;">
+    <div style="text-align:center;">
+
+        <h3 style="margin:0;">
+        🍗 DAPUR BUCICI
+        </h3>
+
+        <div>
+        Pecel Ayam
+        </div>
+
+        <small>
+        Rumah Digital UMKM
+        </small>
+
+    </div>
+
+
+    <hr>
+
+
+    <div>
         <b>No Nota:</b><br>
         ${data.nomor_transaksi || "-"}
     </div>
 
-    <br>
+
+    <div>
+        <b>Tanggal:</b><br>
+        ${new Date().toLocaleString("id-ID")}
+    </div>
+
+
+    <div>
+        <b>Pembayaran:</b><br>
+        Tunai
+    </div>
+
+
+    <hr>
 
     `;
 
 
-    keranjangBelanja.forEach(item=>{
+    keranjangBelanja.forEach(item => {
+
 
         html += `
 
         <div style="
         display:flex;
         justify-content:space-between;
-        font-size:13px;
-        margin-bottom:5px;
+        margin-bottom:8px;
         ">
 
-        <span>
-        ${item.nama}<br>
-        ${item.qty} x ${item.harga.toLocaleString('id-ID')}
-        </span>
+            <div>
+                <b>${item.nama}</b><br>
+                ${item.qty} x Rp ${item.harga.toLocaleString("id-ID")}
+            </div>
 
-        <span>
-        Rp ${(item.qty * item.harga)
-        .toLocaleString('id-ID')}
-        </span>
+
+            <div>
+                Rp ${(item.qty * item.harga)
+                .toLocaleString("id-ID")}
+            </div>
 
         </div>
 
         `;
+
 
     });
 
@@ -471,18 +506,33 @@ function tampilkanNota(data){
 
     <hr>
 
+
     <div style="
     display:flex;
     justify-content:space-between;
+    font-size:16px;
     font-weight:bold;
     ">
 
-    <span>Total</span>
+        <span>TOTAL</span>
 
-    <span>
-    Rp ${Number(data.total)
-    .toLocaleString('id-ID')}
-    </span>
+        <span>
+        Rp ${Number(data.total)
+        .toLocaleString("id-ID")}
+        </span>
+
+    </div>
+
+
+    <hr>
+
+
+    <div style="
+    text-align:center;
+    font-size:12px;
+    ">
+
+    Terima kasih sudah membeli 🙏
 
     </div>
 
@@ -491,13 +541,9 @@ function tampilkanNota(data){
 
     content.innerHTML = html;
 
-
     modal.style.display="flex";
 
 }
-
-
-
 function tutupNota(){
 
     document.getElementById("nota-modal")
