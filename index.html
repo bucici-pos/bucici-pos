@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BUCICI POS v2 - Rumah Digital UMKM</title>
+    
     <style>
         :root{
 
@@ -357,6 +358,220 @@ input:focus{
     background:linear-gradient(90deg,#2563eb,#60a5fa);
 
     margin-bottom:18px;
+
+}/* ============================
+   BUCICI UI Refresh v3
+============================ */
+
+body{
+    background:
+        radial-gradient(circle at top,#eef6ff,#f7faff 45%,#edf3fb);
+}
+
+/* Sidebar */
+
+.sidebar{
+    background:linear-gradient(180deg,#ffffff,#f7fbff);
+    border-right:1px solid rgba(43,108,176,.12);
+    box-shadow:
+        10px 0 40px rgba(43,108,176,.05);
+}
+
+/* Main */
+
+.main-content{
+    padding:32px;
+}
+
+/* Separator */
+
+.pos-main{
+    position:relative;
+    padding-right:30px;
+}
+
+.pos-main::after{
+
+    content:"";
+
+    position:absolute;
+
+    right:0;
+
+    top:0;
+
+    width:1px;
+
+    height:100%;
+
+    background:
+    linear-gradient(
+        transparent,
+        rgba(43,108,176,.18),
+        transparent
+    );
+
+}
+
+/* Card */
+
+.card,
+.widget{
+
+    border:none;
+
+    border-radius:22px;
+
+    background:rgba(255,255,255,.9);
+
+    backdrop-filter:blur(12px);
+
+    box-shadow:
+        0 15px 40px rgba(43,108,176,.08);
+
+}
+
+/* Produk */
+
+.prod-card{
+
+    border-radius:22px;
+
+    border:1px solid rgba(43,108,176,.08);
+
+    transition:.25s;
+
+    overflow:hidden;
+
+}
+
+.prod-card:hover{
+
+    transform:
+        translateY(-6px);
+
+    border-color:#2b6cb0;
+
+    box-shadow:
+        0 18px 45px rgba(43,108,176,.16);
+
+}
+
+.prod-card-icon{
+
+    font-size:40px;
+
+    transition:.25s;
+
+}
+
+.prod-card:hover .prod-card-icon{
+
+    transform:scale(1.12);
+
+}
+
+/* Button */
+
+.btn-primary,
+.btn-view-toggle{
+
+    border:none;
+
+    border-radius:14px;
+
+    padding:14px 22px;
+
+    font-weight:700;
+
+    background:
+        linear-gradient(135deg,#4f8dfd,#2b6cb0);
+
+    color:white;
+
+    transition:.25s;
+
+    box-shadow:
+        0 10px 30px rgba(43,108,176,.25);
+
+}
+
+.btn-primary:hover,
+.btn-view-toggle:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 18px 40px rgba(43,108,176,.35);
+
+}
+
+/* Input */
+
+input{
+
+    border-radius:14px !important;
+
+    border:1px solid rgba(43,108,176,.12);
+
+    transition:.2s;
+
+}
+
+input:focus{
+
+    outline:none;
+
+    border-color:#2b6cb0;
+
+    box-shadow:
+        0 0 0 4px rgba(43,108,176,.10);
+
+}
+
+/* Riwayat */
+
+.prod-list-row{
+
+    border-radius:16px;
+
+    transition:.2s;
+
+}
+
+.prod-list-row:hover{
+
+    transform:translateX(5px);
+
+    background:#f5f9ff;
+
+}
+
+/* Widget */
+
+.widget{
+
+    position:relative;
+
+}
+
+.widget::before{
+
+    content:"";
+
+    position:absolute;
+
+    left:22px;
+
+    top:18px;
+
+    width:60px;
+
+    height:5px;
+
+    border-radius:30px;
+
+    background:#4f8dfd;
 
 }
     </style>
