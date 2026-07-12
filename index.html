@@ -1362,19 +1362,70 @@ container.innerHTML = "Gagal memuat produk.";
 return;
 }
 let html = "";
-hasil.data.forEach(item=>{
-html += `<div class="prod-list-row">
-<div>
-<b>${item.nama_produk}</b><br>
-<small>
-SKU : ${item.sku}<br>
-Stok : ${item.stok}
-</small>
+html += `
+
+<div class="card" style="margin-bottom:14px;">
+
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+
+        <div>
+
+            <div style="font-size:18px;font-weight:700;">
+
+                🍗 ${item.nama_produk}
+
+            </div>
+
+            <div style="margin-top:6px;color:#64748b;">
+
+                SKU : ${item.sku}
+
+            </div>
+
+            <div style="margin-top:4px;color:#64748b;">
+
+                Stok : ${item.stok}
+
+            </div>
+
+        </div>
+
+        <div style="text-align:right;">
+
+            <div style="font-size:20px;font-weight:700;color:#2563eb;">
+
+                Rp ${Number(item.harga_jual).toLocaleString("id-ID")}
+
+            </div>
+
+            <div style="margin-top:14px;display:flex;gap:8px;justify-content:flex-end;">
+
+                <button
+                    class="btn-primary"
+                    onclick="editProduk('${item.produk_id}')">
+
+                    Edit
+
+                </button>
+
+                <button
+                    class="btn-primary"
+                    style="background:#dc2626;"
+                    onclick="hapusProduk('${item.produk_id}')">
+
+                    Hapus
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
-<div style="text-align:right;">
-Rp ${Number(item.harga_jual).toLocaleString("id-ID")}
-</div>
-</div>`;
+
+`;
 });
 container.innerHTML = html;
 }catch(e){
