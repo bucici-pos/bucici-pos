@@ -944,49 +944,13 @@ Rp 0
 
                 // List View
                 const row = document.createElement('div');
-                row.className = "prod-list-row";
-                row.onclick = () => tambahKeKeranjang(item.sku, item.nama_produk, harga);
-               row.innerHTML = `
-
-<div style="display:flex;justify-content:space-between;align-items:center;">
-
-    <div>
-
-        <div style="font-weight:700;font-size:15px;">
-            ${item.nama}
-        </div>
-
-        <div style="color:#64748b;font-size:13px;margin-top:5px;">
-            Rp ${item.harga.toLocaleString("id-ID")}
-        </div>
-
-    </div>
-
-    <div style="display:flex;align-items:center;gap:8px;">
-
-        <button class="cart-qty-btn"
-        onclick="ubahQty('${item.sku}',-1)">
-        −
-        </button>
-
-        <b>${item.qty}</b>
-
-        <button class="cart-qty-btn"
-        onclick="ubahQty('${item.sku}',1)">
-        +
-        </button>
-
-    </div>
-
-</div>
-
-<div style="margin-top:10px;text-align:right;font-weight:700;color:#2563eb;">
-
-Rp ${subtotal.toLocaleString("id-ID")}
-
-</div>
-
+row.className = "prod-list-row";
+row.onclick = () => tambahKeKeranjang(item.sku, item.nama_produk, harga);
+row.innerHTML = `
+<span>${ikon} <strong>${item.nama_produk}</strong></span>
+<span>Rp ${harga.toLocaleString('id-ID')}</span>
 `;
+listWrapper.appendChild(row);
         }
 
         function tambahKeKeranjang(sku, nama, harga) {
