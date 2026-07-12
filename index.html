@@ -86,46 +86,88 @@
     transition:.3s;
 
 }
-        .sidebar-brand { text-align: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
-        .sidebar-brand h2 { margin: 0; font-size: 20px; color: var(--primary); }
-        .sidebar-brand p { margin: 5px 0 0 0; font-size: 11px; color: var(--text-muted); }
+.sidebar-brand{
+
+    text-align:center;
+
+    padding-bottom:22px;
+
+    margin-bottom:24px;
+
+    border-bottom:1px solid rgba(148,163,184,.18);
+
+}
+        .sidebar-brand h2{
+
+    margin:0;
+
+    font-size:22px;
+
+    font-weight:800;
+
+    letter-spacing:.5px;
+
+    color:#2563eb;
+
+}
+        .sidebar-brand p{
+
+    margin-top:8px;
+
+    font-size:12px;
+
+    color:#94a3b8;
+
+    letter-spacing:.3px;
+
+}
         .menu-group { margin-bottom: 20px; }
         .menu-label { font-size: 11px; font-weight: bold; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; padding-left: 10px; }
-        .menu-item{
+       .menu-item{
 
-    display:block;
+    display:flex;
+    align-items:center;
 
-    padding:14px;
+    height:48px;
 
-    margin-bottom:8px;
+    padding:0 16px;
+
+    margin-bottom:6px;
 
     border-radius:14px;
 
     cursor:pointer;
 
-    transition:.25s;
+    font-size:14px;
 
     font-weight:600;
+
+    color:#475569;
+
+    transition:all .25s ease;
+
+    user-select:none;
 
 }
 
 .menu-item:hover{
 
-    background:#eff6ff;
+    background:#eef5ff;
 
-    transform:translateX(5px);
+    color:#2563eb;
+
+    transform:translateX(4px);
 
 }
 
 .menu-item.active{
 
-    background:linear-gradient(
-        90deg,
-        #2563eb,
-        #3b82f6
-    );
+    background:linear-gradient(90deg,#2563eb,#3b82f6);
 
-    color:white;
+    color:#fff;
+
+    box-shadow:
+        0 8px 24px rgba(37,99,235,.20);
 
 }
 
@@ -385,69 +427,98 @@ input:focus{
         }
 
         /* DASHBOARD WIDGETS */
-        .dash-grid{
+       .dash-grid{
 
     display:grid;
 
-    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
 
-    gap:20px;
+    gap:24px;
 
-    margin-bottom:25px;
+    margin:24px 0 32px;
+
+    align-items:stretch;
 
 }
         .widget{
 
-    background:white;
+    position:relative;
 
-    border-radius:20px;
+    background:rgba(255,255,255,.88);
 
-    padding:25px;
+    backdrop-filter:blur(16px);
 
-    border:1px solid #edf2f7;
+    border:1px solid rgba(226,232,240,.9);
 
-    box-shadow:0 10px 25px rgba(0,0,0,.05);
+    border-radius:22px;
 
-    transition:.25s;
+    padding:26px;
+
+    overflow:hidden;
+
+    transition:all .28s ease;
+
+    box-shadow:
+        0 12px 32px rgba(15,23,42,.05);
 
 }
-
 .widget:hover{
 
-    transform:translateY(-4px);
+    transform:translateY(-6px);
+
+    border-color:#bfdbfe;
+
+    box-shadow:
+        0 20px 45px rgba(37,99,235,.12);
 
 }
-        .widget-val { font-size: 18px; font-weight: bold; color: var(--primary); margin-top: 5px; }
+       .widget-val{
+
+    font-size:34px;
+
+    font-weight:800;
+
+    color:#0f172a;
+
+    line-height:1.1;
+
+}
         .widget label{
 
     display:block;
 
-    color:#64748b;
+    font-size:12px;
 
-    font-size:14px;
+    font-weight:700;
 
-    font-weight:600;
+    letter-spacing:1px;
 
-    margin-bottom:8px;
+    text-transform:uppercase;
+
+    color:#94a3b8;
+
+    margin-bottom:14px;
 
 }
         .widget::before{
 
     content:"";
 
-    display:block;
+    position:absolute;
 
-    width:52px;
+    top:0;
 
-    height:6px;
+    left:0;
 
-    border-radius:99px;
+    width:100%;
+
+    height:4px;
 
     background:linear-gradient(90deg,#2563eb,#60a5fa);
 
-    margin-bottom:18px;
+}
 
-}/* ============================
+/* ============================
    BUCICI UI Refresh v3
 ============================ */
 
@@ -463,6 +534,51 @@ body{
     border-right:1px solid rgba(43,108,176,.12);
     box-shadow:
         10px 0 40px rgba(43,108,176,.05);
+}
+        /* ============================
+   Dashboard Header
+============================ */
+
+.dashboard-header{
+
+    padding:34px;
+
+}
+
+.dashboard-title{
+
+    font-size:14px;
+
+    text-transform:uppercase;
+
+    letter-spacing:2px;
+
+    color:#94a3b8;
+
+    font-weight:700;
+
+}
+
+.dashboard-subtitle{
+
+    font-size:34px;
+
+    font-weight:800;
+
+    color:#0f172a;
+
+    margin-top:8px;
+
+}
+
+.dashboard-description{
+
+    margin-top:10px;
+
+    color:#64748b;
+
+    font-size:15px;
+
 }
 
 /* Main */
@@ -770,12 +886,24 @@ Transaksi Baru
             <div id="kamar-dash" class="kamar-section active">
                 <div class="card" style="margin-bottom:20px;">
 
-    <div style="font-size:28px;font-weight:700;">
-        👋 Selamat Datang
+    <div class="card dashboard-header">
+
+    <div class="dashboard-title">
+
+        Dashboard
+
     </div>
 
-    <div style="margin-top:8px;color:#64748b;">
-        BUCICI POS v2 • Rumah Digital UMKM Indonesia
+    <div class="dashboard-subtitle">
+
+        BUCICI POS
+
+    </div>
+
+    <div class="dashboard-description">
+
+        Rumah Digital UMKM Indonesia
+
     </div>
 
 </div>
@@ -785,16 +913,16 @@ Transaksi Baru
                 </div>
                 <div class="card">
 
-    <div class="card-title">
-        🧾 Transaksi Terakhir
-    </div>
+  <div class="card-title">
+    Transaksi Terakhir
+</div>
 
     <div id="dash-riwayat">
         Belum ada transaksi.
     </div>
 
 </div>
-                <button class="btn-primary" style="width:auto;" onclick="ambilDataDashboard()">🔄 Segarkan Laporan</button>
+                <button class="btn-primary" style="width:auto;" onclick="ambilDataDashboard()"> Refresh Dashboard </button>
             </div>
 <div id="kamar-riwayat" class="kamar-section">
 
@@ -846,9 +974,11 @@ onclick="bukaFormProduk()">
                     <div class="pos-main">
                         <div class="card" style="margin-bottom:18px;padding:20px 24px;">
 
-    <div style="font-size:22px;font-weight:700;color:#1e293b;">
-        🍗 Produk
-    </div>
+<div style="font-size:24px;font-weight:700;color:#0f172a;">
+
+    Produk
+
+</div>
 
     <div style="margin-top:6px;color:#64748b;font-size:14px;">
         Pilih menu untuk ditambahkan ke keranjang.
@@ -856,8 +986,8 @@ onclick="bukaFormProduk()">
 
 </div>
                         <div class="pos-header-actions">
-                            <button class="btn-view-toggle" onclick="ambilMenuKasir()">🔄 Ambil Menu Terbaru</button>
-                            <button class="btn-view-toggle" id="btn-toggle-view" onclick="togglePosView()">📋 Mode: Grid</button>
+                            <button class="btn-view-toggle" onclick="ambilMenuKasir()"> Refresh Produk </button>
+                            <button class="btn-view-toggle" id="btn-toggle-view" onclick="togglePosView()"> Mode: Grid</button>
                         </div>
                         <div id="loading-pos" style="text-align:center; padding:30px; color:var(--text-muted);">Silakan klik "Ambil Menu Terbaru"...</div>
                         <div id="pos-grid-wrapper" class="product-grid"></div>
@@ -866,7 +996,7 @@ onclick="bukaFormProduk()">
 
                     <div class="pos-sidebar">
                         <div class="card">
-                            <div class="card-title">🛒 Keranjang Belanja</div>
+                            <div class="card-title"> Keranjang </div>
                             <div style="margin-bottom:15px;color:#64748b;font-size:14px;">
 
     Total Item :
@@ -877,7 +1007,15 @@ onclick="bukaFormProduk()">
                                 Keranjang masih kosong.
                             </div>
                             <div class="cart-total-box" style="margin-top:25px;padding:20px;background:#f4f8ff;border-radius:18px;">
-    <span>Total Tagihan</span>
+    <span
+style="font-size:12px;
+letter-spacing:1px;
+text-transform:uppercase;
+color:#94a3b8;">
+
+TOTAL
+
+</span>
     <span id="cart-total-price"
 style="font-size:28px;font-weight:800;color:#2563eb;">
 Rp 0
