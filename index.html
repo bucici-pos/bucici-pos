@@ -724,6 +724,17 @@ Transaksi Baru
         <div class="main-content">
             <!-- DASHBOARD -->
             <div id="kamar-dash" class="kamar-section active">
+                <div class="card" style="margin-bottom:20px;">
+
+    <div style="font-size:28px;font-weight:700;">
+        👋 Selamat Datang
+    </div>
+
+    <div style="margin-top:8px;color:#64748b;">
+        BUCICI POS v2 • Rumah Digital UMKM Indonesia
+    </div>
+
+</div>
                 <div class="dash-grid">
                     <div class="widget"><label>Omzet Hari Ini</label><div class="widget-val" id="dash-omzet">Rp 0</div></div>
                     <div class="widget"><label>Total Transaksi</label><div class="widget-val" id="dash-transaksi">0 Nota</div></div>
@@ -760,6 +771,17 @@ Transaksi Baru
             <div id="kamar-kasir" class="kamar-section">
                 <div class="pos-container">
                     <div class="pos-main">
+                        <div class="card" style="margin-bottom:18px;padding:20px 24px;">
+
+    <div style="font-size:22px;font-weight:700;color:#1e293b;">
+        🍗 Produk
+    </div>
+
+    <div style="margin-top:6px;color:#64748b;font-size:14px;">
+        Pilih menu untuk ditambahkan ke keranjang.
+    </div>
+
+</div>
                         <div class="pos-header-actions">
                             <button class="btn-view-toggle" onclick="ambilMenuKasir()">🔄 Ambil Menu Terbaru</button>
                             <button class="btn-view-toggle" id="btn-toggle-view" onclick="togglePosView()">📋 Mode: Grid</button>
@@ -771,11 +793,17 @@ Transaksi Baru
 
                     <div class="pos-sidebar">
                         <div class="card">
-                            <div class="card-title">📝 Struk Belanjaan</div>
+                            <div class="card-title">🛒 Keranjang Belanja</div>
+                            <div style="margin-bottom:15px;color:#64748b;font-size:14px;">
+
+    Total Item :
+    <b id="cart-total-item">0</b>
+
+</div>
                             <div id="cart-items-list" style="color:var(--text-muted); font-size:13px; text-align:center; padding:10px 0;">
                                 Keranjang masih kosong.
                             </div>
-                            <div class="cart-total-box">
+                            <div class="cart-total-box" style="margin-top:25px;padding:20px;background:#f4f8ff;border-radius:18px;">
     <span>Total Tagihan</span>
     <span id="cart-total-price">Rp 0</span>
 </div>
@@ -907,10 +935,10 @@ Transaksi Baru
                 return;
             }
 
-            let totalHarga = 0;
+            let totalHarga = 0; let totalItem = 0;
             keranjangBelanja.forEach(item => {
                 const subtotal = item.harga * item.qty;
-                totalHarga += subtotal;
+                totalHarga += subtotal; totalItem += item.qty;
 
                 const row = document.createElement('div');
                 row.className = "cart-item";
@@ -924,7 +952,7 @@ Transaksi Baru
                     <span>Rp ${subtotal.toLocaleString('id-ID')}</span>
                 `;
                 listContainer.appendChild(row);
-            });
+            });document.getElementById("cart-total-item").innerText = totalItem;
             totalContainer.innerText = "Rp " + totalHarga.toLocaleString('id-ID');
 
 hitungKembalian();
