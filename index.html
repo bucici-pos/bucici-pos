@@ -946,7 +946,8 @@ Rp 0
                 const row = document.createElement('div');
 row.className = "prod-list-row";
 row.onclick = () => tambahKeKeranjang(item.sku, item.nama_produk, harga);
-row.innerHTML = <span>${ikon} <strong>${item.nama_produk}</strong></span>
+row.innerHTML = `
+<span>${ikon} <strong>${item.nama_produk}</strong></span>
 <span>Rp ${harga.toLocaleString("id-ID")}</span>
 `;
 listWrapper.appendChild(row);
