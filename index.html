@@ -760,7 +760,9 @@ Transaksi Baru
                 <div class="menu-item" id="menu-riwayat" onclick="pindahKamar('riwayat')">
     🧾 Riwayat
 </div>
-            </div>
+       <div class="menu-item" id="menu-produk" onclick="pindahKamar('produk')">
+    📦 Produk
+</div>     </div>
         </div>
 
         <div class="main-content">
@@ -804,6 +806,31 @@ Transaksi Baru
 
         <div id="list-transaksi">
             Memuat...
+        </div>
+
+    </div>
+
+</div>
+            <div id="kamar-produk" class="kamar-section">
+
+    <div class="page-title">
+        📦 Manajemen Produk
+    </div>
+
+    <div class="card">
+
+        <button class="btn-primary" onclick="alert('Tambah Produk (Coming Soon)')">
+            ➕ Tambah Produk
+        </button>
+
+        <div id="list-produk-manajemen" style="margin-top:20px;">
+
+            <div style="padding:30px;text-align:center;color:#64748b;">
+
+                Belum ada data.
+
+            </div>
+
         </div>
 
     </div>
@@ -902,8 +929,8 @@ Rp 0
             if(window.innerWidth <= 768) toggleSidebar();
             if(namaKamar === 'kasir' && daftarProdukGlobal.length === 0) ambilMenuKasir();
             if(namaKamar === 'dash') ambilDataDashboard();
-            if(namaKamar === 'riwayat')
-    ambilRiwayat();
+            if(namaKamar === 'riwayat') ambilRiwayat();
+            if(namaKamar === 'produk') ambilManajemenProduk();
         }
 
         function toggleSidebar() {
@@ -1305,36 +1332,57 @@ function tutupNota(){
             }
         }
  async function ambilRiwayat(){
-
-    const res = await fetch(API_URL + "?action=transaksi");
-
-    const hasil = await res.json();
-
-    let html = "";
-
-    hasil.data.forEach(item=>{
-
-        html += `
-        <div class="prod-list-row"
-        onclick="lihatDetail('${item.penjualan_id}','${item.nomor_transaksi}')">
-
-            <div>
-                <b>${item.nomor_transaksi}</b><br>
-                ${new Date(item.tanggal).toLocaleString("id-ID")}
-            </div>
-
-            <div>
-                Rp ${Number(item.total).toLocaleString("id-ID")}
-            </div>
-
-        </div>
-        `;
-
-    });
-
-    document.getElementById("list-transaksi").innerHTML = html;
-
-}async function lihatDetail(id, nota){
+const res = await fetch(API_URL + "?action=transaksi");const hasil = await res.json();
+let html = "";
+hasil.data.forEach(item=>{
+html += `
+<div class="prod-list-row"
+onclick="lihatDetail('${item.penjualan_id}','${item.nomor_transaksi}')">
+<div>
+<b>${item.nomor_transaksi}</b><br>
+${new Date(item.tanggal).toLocaleString("id-ID")}
+</div>
+<div>
+Rp ${Number(item.total).toLocaleString("id-ID")}
+</div>
+</div>
+`;
+});
+document.getElementById("list-transaksi").innerHTML = html;
+ }
+        
+async function ambilManajemenProduk(){
+const container = document.getElementById("list-produk-manajemen");
+container.innerHTML = "Memuat produk...";
+try{
+const res = await fetch(API_URL + "?action=produk");
+const hasil = await res.json();
+if(hasil.status !== "success"){
+container.innerHTML = "Gagal memuat produk.";
+return;
+}
+let html = "";
+hasil.data.forEach(item=>{
+html += `<div class="prod-list-row">
+<div>
+<b>${item.nama_produk}</b><br>
+<small>
+SKU : ${item.sku}<br>
+Stok : ${item.stok}
+</small>
+</div>
+<div style="text-align:right;">
+Rp ${Number(item.harga_jual).toLocaleString("id-ID")}
+</div>
+</div>`;
+});
+container.innerHTML = html;
+}catch(e){
+console.error(e);
+container.innerHTML = "Terjadi kesalahan.";
+}
+}
+     async function lihatDetail(id, nota){
 
     const res = await fetch(API_URL + "?action=detailTransaksi&id=" + id);
 
